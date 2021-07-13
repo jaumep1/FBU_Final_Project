@@ -12,7 +12,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="5dp"
         android:layout_toStartOf="@+id/tvTime"
         android:textSize="20sp"
@@ -25,7 +25,7 @@
         android:layout_below="@id/tvName"
         android:layout_alignParentStart="true"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="16dp"
         tools:text="Created By: Jaume Pujadas" />
 
     <TextView
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="5dp"
         tools:text="July 6, 2021 8AM-10AM" />
 
@@ -45,19 +45,25 @@
         android:layout_below="@id/tvAuthor"
         android:layout_alignParentStart="true"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_toStartOf="@+id/ivPoster"
+        android:layout_marginTop="16dp"
         tools:text="This is a sample description of an event that I am using to help configure the layout for a feed item. Events like these will display in both the main feed and the subscribed feed assuming that the user subscribes to the event." />
 
     <ImageView
         android:id="@+id/ivPoster"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvTime"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_below="@+id/tvDescription"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivPoster"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        tools:text="Subscribe" />
 
 </RelativeLayout>
