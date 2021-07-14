@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.fbu_final_project.databinding.ActivityMainBinding;
+import com.example.fbu_final_project.databinding.ActivitySignupBinding;
 import com.example.fbu_final_project.fragments.CreateFragment;
 import com.example.fbu_final_project.fragments.EventsFeedFragment;
 import com.example.fbu_final_project.fragments.PersonalEventsFragment;
@@ -27,20 +29,18 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     final FragmentManager fragmentManager = getSupportFragmentManager();
 
-    BottomNavigationView bottomNavigation;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+
+
         //setup toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
 
-        bottomNavigation = findViewById(R.id.bottomNavigation);
-
-        bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        binding.bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment;

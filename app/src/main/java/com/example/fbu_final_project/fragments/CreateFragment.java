@@ -11,21 +11,22 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.fbu_final_project.R;
+import com.example.fbu_final_project.databinding.FragmentCreateBinding;
 
 import android.text.format.DateFormat;
 import java.util.Calendar;
 
 public class CreateFragment extends Fragment {
 
-    TextView tvStartDate;
-    TextView tvEndDate;
-    TextView tvStartTime;
-    TextView tvEndTime;
+    FragmentCreateBinding binding;
 
     public CreateFragment() {
         // Required empty public constructor
@@ -46,17 +47,15 @@ public class CreateFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        tvStartDate = view.findViewById(R.id.tvStartDate);
-        tvEndDate = view.findViewById(R.id.tvEndDate);
-        tvStartTime = view.findViewById(R.id.tvStartTime);
-        tvEndTime = view.findViewById(R.id.tvEndTime);
+        binding = FragmentCreateBinding.inflate(getLayoutInflater());
         setOnClickListeners();
 
     }
 
+
+
     private void setOnClickListeners() {
-        tvStartTime.setOnClickListener(new View.OnClickListener() {
+        binding.tvStartTime.setOnClickListener(new View.OnClickListener() {
 
             int hour;
             int min;
@@ -71,7 +70,7 @@ public class CreateFragment extends Fragment {
                                 hour = hourOfDay;
                                 min = minute;
                                 calendar.set(0,0,0, hourOfDay, minute);
-                                tvStartTime.setText(DateFormat.format("hh:mm aa", calendar));
+                                binding.tvStartTime.setText(DateFormat.format("hh:mm aa", calendar));
                             }
                         }, 12, 0, false);
 
@@ -80,7 +79,7 @@ public class CreateFragment extends Fragment {
             }
         });
 
-        tvEndTime.setOnClickListener(new View.OnClickListener() {
+        binding.tvEndTime.setOnClickListener(new View.OnClickListener() {
 
             int hour;
             int min;
@@ -95,7 +94,7 @@ public class CreateFragment extends Fragment {
                                 hour = hourOfDay;
                                 min = minute;
                                 calendar.set(0,0,0, hourOfDay, minute);
-                                tvEndTime.setText(DateFormat.format("hh:mm aa", calendar));
+                                binding.tvEndTime.setText(DateFormat.format("hh:mm aa", calendar));
                             }
                         }, 12, 0, false);
 
@@ -104,7 +103,7 @@ public class CreateFragment extends Fragment {
             }
         });
 
-        tvStartDate.setOnClickListener(new View.OnClickListener() {
+        binding.tvStartDate.setOnClickListener(new View.OnClickListener() {
 
             int year;
             int month;
@@ -123,7 +122,7 @@ public class CreateFragment extends Fragment {
                                 month = monthOfYear;
                                 day = dayOfMonth;
                                 calendar.set(year, month, day);
-                                tvStartDate.setText(DateFormat.format("MM/dd/yyyy", calendar));
+                                binding.tvStartDate.setText(DateFormat.format("MM/dd/yyyy", calendar));
                             }
                         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
 
@@ -132,7 +131,7 @@ public class CreateFragment extends Fragment {
             }
         });
 
-        tvEndDate.setOnClickListener(new View.OnClickListener() {
+        binding.tvEndDate.setOnClickListener(new View.OnClickListener() {
 
             int year;
             int month;
@@ -151,7 +150,7 @@ public class CreateFragment extends Fragment {
                                 month = monthOfYear;
                                 day = dayOfMonth;
                                 calendar.set(year, month, day);
-                                tvEndDate.setText(DateFormat.format("MM/dd/yyyy", calendar));
+                                binding.tvEndDate.setText(DateFormat.format("MM/dd/yyyy", calendar));
                             }
                         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
 

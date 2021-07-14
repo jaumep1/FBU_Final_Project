@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.fbu_final_project.databinding.ActivitySignupBinding;
 import com.example.fbu_final_project.models.User;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -20,31 +21,21 @@ public class SignupActivity extends AppCompatActivity {
 
     private static final String TAG = "SignupActivity";
 
-    EditText etUsername;
-    EditText etPassword;
-    EditText etFirstname;
-    EditText etLastname;
-    Button btnSignup;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        btnSignup = findViewById(R.id.btnSignup);
-        etFirstname = findViewById(R.id.etFirstname);
-        etLastname = findViewById(R.id.etLastname);
-        etUsername = findViewById(R.id.etUsername);
-        etPassword = findViewById(R.id.etPassword);
+        ActivitySignupBinding binding = ActivitySignupBinding.inflate(getLayoutInflater());
 
-        btnSignup.setOnClickListener(new View.OnClickListener() {
+        binding.btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "onClick login button");
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
-                String firstname = etFirstname.getText().toString();
-                String lastname = etLastname.getText().toString();
+                String username = binding.etUsername.getText().toString();
+                String password = binding.etPassword.getText().toString();
+                String firstname = binding.etFirstname.getText().toString();
+                String lastname = binding.etLastname.getText().toString();
                 signUp(username, password, firstname, lastname);
             }
         });
