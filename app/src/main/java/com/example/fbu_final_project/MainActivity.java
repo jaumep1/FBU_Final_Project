@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        binding.bottomNavigation.setSelectedItemId(R.id.miEventsFeed);
     }
 
     @Override

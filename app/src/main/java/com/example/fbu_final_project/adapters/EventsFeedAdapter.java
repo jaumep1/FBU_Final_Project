@@ -45,6 +45,12 @@ public class EventsFeedAdapter extends RecyclerView.Adapter<EventsFeedAdapter.Vi
         return events.size();
     }
 
+    // Clean all elements of the recycler
+    public void clear() {
+        events.clear();
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ItemEventBinding binding;
