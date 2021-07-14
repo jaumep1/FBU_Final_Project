@@ -9,10 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fbu_final_project.R;
+import com.example.fbu_final_project.databinding.FragmentPersonalEventsBinding;
 
 public class PersonalEventsFragment extends Fragment {
 
-
+    FragmentPersonalEventsBinding binding;
 
     public PersonalEventsFragment() {
         // Required empty public constructor
@@ -27,6 +28,7 @@ public class PersonalEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_personal_events, container, false);
+        binding = FragmentPersonalEventsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 }

@@ -24,9 +24,10 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
 
         ActivitySignupBinding binding = ActivitySignupBinding.inflate(getLayoutInflater());
+
+        setContentView(binding.getRoot());
 
         binding.btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override

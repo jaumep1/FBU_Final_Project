@@ -9,10 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fbu_final_project.R;
+import com.example.fbu_final_project.databinding.FragmentEventsFeedBinding;
 
 public class EventsFeedFragment extends Fragment {
 
-
+    FragmentEventsFeedBinding binding;
 
     public EventsFeedFragment() {
         // Required empty public constructor
@@ -27,6 +28,7 @@ public class EventsFeedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_events_feed, container, false);
+        binding = FragmentEventsFeedBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 }
