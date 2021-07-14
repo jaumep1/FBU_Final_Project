@@ -9,4 +9,6 @@
     <string name="my_events">My Events</string>
     <string name="lastname">Lastname</string>
     <string name="firstname">Firstname</string>
+    <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
 </resources>
