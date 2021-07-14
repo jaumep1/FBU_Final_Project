@@ -1,7 +1,7 @@
 package com.example.fbu_final_project.adapters;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fbu_final_project.R;
+import com.example.fbu_final_project.EventDetailsActivity;
+import com.example.fbu_final_project.MainActivity;
 import com.example.fbu_final_project.databinding.ItemEventBinding;
 import com.example.fbu_final_project.models.Event;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -33,14 +36,12 @@ public class EventsFeedAdapter extends RecyclerView.Adapter<EventsFeedAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull EventsFeedAdapter.ViewHolder holder, int position) {
-        Log.i("waka", "reached");
         Event event = events.get(position);
         holder.bind(event);
     }
 
     @Override
     public int getItemCount() {
-        Log.i("waka", String.valueOf(events.size()));
         return events.size();
     }
 
@@ -56,8 +57,14 @@ public class EventsFeedAdapter extends RecyclerView.Adapter<EventsFeedAdapter.Vi
 
         @Override
         public void onClick(View v) {
-            Log.i("waka", "Postion clicked: " + getAdapterPosition());
 
+            int position = getAdapterPosition();
+
+            if (position != RecyclerView.NO_POSITION) {
+                Intent i = new Intent(context, EventDetailsActivity.class);
+                i.putExtra(Event.class.getSimpleName(), Parcels.wrap(events.get(position)));
+                context.startActivity(i);
+            }
         }
 
         public void bind(Event event) {
