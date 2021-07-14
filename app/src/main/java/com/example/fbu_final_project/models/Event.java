@@ -7,18 +7,26 @@ import java.util.Date;
 
 @ParseClassName("Event")
 public class Event extends ParseObject {
-    private static final String KEY_CREATED_BY = "createdBy";
-    private static final String KEY_EVENT_NAME = "eventName";
-    private static final String KEY_EVENT_DESCRIPTION = "eventDescription";
-    private static final String KEY_START_TIME = "startTime";
-    private static final String KEY_END_TIME = "endTime";
+    public static final String KEY_CREATED_BY = "createdBy";
+    public static final String KEY_AUTHOR = "authorName";
+    public static final String KEY_EVENT_NAME = "eventName";
+    public static final String KEY_EVENT_DESCRIPTION = "eventDescription";
+    public static final String KEY_START_TIME = "startTime";
+    public static final String KEY_END_TIME = "endTime";
 
-    public String getAuthor() {
+    public String getCreator() {
         return getString(KEY_CREATED_BY);
     }
 
+    public void setCreator(String creatorID) { put(KEY_CREATED_BY, creatorID);
+    }
+
+    public String getAuthor() {
+        return getString(KEY_AUTHOR);
+    }
+
     public void setAuthor(String author) {
-        put(KEY_CREATED_BY, author);
+        put(KEY_AUTHOR, author);
     }
 
     public String getName() {

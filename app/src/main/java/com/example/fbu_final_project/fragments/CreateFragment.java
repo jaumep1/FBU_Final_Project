@@ -20,6 +20,7 @@ import android.widget.TimePicker;
 import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.databinding.FragmentCreateBinding;
 import com.example.fbu_final_project.models.Event;
+import com.example.fbu_final_project.models.User;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -211,7 +212,10 @@ public class CreateFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createEvent() {
         Event event = new Event();
-        event.setAuthor(ParseUser.getCurrentUser().getObjectId());
+        String fullname = String.format("%s %s", ((User) ParseUser.getCurrentUser()).getFirstname(),
+                ((User) ParseUser.getCurrentUser()).getLastname());
+        event.setAuthor(fullname);
+        event.setCreator(ParseUser.getCurrentUser().getObjectId());
         event.setName(binding.etEventName.getText().toString());
         event.setDescription(binding.etDescription.getText().toString());
 
