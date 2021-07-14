@@ -21,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText etUsername;
     EditText etPassword;
     Button btnLogin;
+    Button btnSignup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         btnLogin = findViewById(R.id.btnLogin);
+        btnSignup = findViewById(R.id.btnSignup);
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
 
@@ -40,6 +42,14 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser(username, password);
             }
         });
+
+        btnSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick login button");
+                goSignupActivity();
+            }
+        });
     }
 
     private void loginUser(String username, String password) {
@@ -49,15 +59,23 @@ public class LoginActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Issue on login", e);
-                    Toast.makeText(LoginActivity.this, "Invalid Login!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Invalid Login!",
+                            Toast.LENGTH_SHORT).show();
 
                     return;
                 }
 
                 goMainActivity();
-                Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Success!",
+                        Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void goSignupActivity() {
+        Intent i = new Intent(this, SignupActivity.class);
+        startActivity(i);
+        finish();
     }
 
     private void goMainActivity() {
