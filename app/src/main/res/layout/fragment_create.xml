@@ -12,8 +12,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        tools:text="Name" />
+        android:hint="@string/name"
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/etDescription"
@@ -24,8 +24,8 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:gravity="start|top"
-        android:inputType="textMultiLine"
-        tools:text="Description" />
+        android:hint="@string/description"
+        android:inputType="textMultiLine" />
 
     <RelativeLayout
         android:id="@+id/rlTimeContainer"
@@ -44,7 +44,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_toEndOf="@+id/tvStartTime"
-            android:text="END DATE" />
+            android:text="@string/end_date" />
 
         <TextView
             android:id="@+id/tvEndTime"
@@ -55,7 +55,7 @@
             android:layout_marginTop="16dp"
             android:layout_toEndOf="@+id/tvStartTime"
             android:ems="10"
-            android:text="END TIME" />
+            android:text="@string/end_time" />
 
         <TextView
             android:id="@+id/tvStartDate"
@@ -65,7 +65,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="START DATE" />
+            android:text="@string/start_date" />
 
         <TextView
             android:id="@+id/tvStartTime"
@@ -75,7 +75,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:ems="10"
-            android:text="START TIME" />
+            android:text="@string/start_time" />
 
         <TextView
             android:id="@+id/timeHeader"
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="Event Time" />
+            android:text="@string/event_time" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="Tags" />
+            android:text="@string/tags" />
 
         <CheckBox
             android:id="@+id/cbSportsTag"
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tagsHeader"
             android:layout_marginStart="16dp"
-            android:text="Sports" />
+            android:text="@string/sports" />
 
         <CheckBox
             android:id="@+id/cbMusicTag"
@@ -118,17 +118,18 @@
             android:layout_below="@id/tagsHeader"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_toRightOf="@id/cbSportsTag"
-            android:text="Music" />
+            android:layout_toEndOf="@id/cbSportsTag"
+            android:text="@string/music" />
 
         <CheckBox
             android:id="@+id/cbArtTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tagsHeader"
+            android:layout_marginStart="15dp"
             android:layout_marginEnd="16dp"
-            android:layout_toRightOf="@id/cbMusicTag"
-            android:text="Art" />
+            android:layout_toEndOf="@+id/cbMusicTag"
+            android:text="@string/art" />
 
         <CheckBox
             android:id="@+id/cbTechTag"
@@ -136,7 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/cbSportsTag"
             android:layout_marginStart="16dp"
-            android:text="Tech" />
+            android:text="@string/tech" />
 
         <CheckBox
             android:id="@+id/cbClubTag"
@@ -146,7 +147,7 @@
             android:layout_alignStart="@+id/cbMusicTag"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="16dp"
-            android:text="Club" />
+            android:text="@string/club" />
 
         <CheckBox
             android:id="@+id/cbProfessionalTag"
@@ -156,7 +157,7 @@
             android:layout_alignStart="@+id/cbArtTag"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="16dp"
-            android:text="Professional" />
+            android:text="@string/professional" />
     </RelativeLayout>
 
     <Button
@@ -166,6 +167,17 @@
         android:layout_below="@+id/rlTagsContainer"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="Add Image" />
+        android:text="@string/add_image" />
+
+    <Button
+        android:id="@+id/btnCreate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnAddImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/button" />
 
 </RelativeLayout>
