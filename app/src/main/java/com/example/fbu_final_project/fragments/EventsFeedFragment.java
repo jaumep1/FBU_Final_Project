@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.adapters.EventsFeedAdapter;
 import com.example.fbu_final_project.databinding.FragmentEventsFeedBinding;
 import com.example.fbu_final_project.models.Event;
@@ -85,7 +84,7 @@ public class EventsFeedFragment extends Fragment {
                 android.R.color.holo_red_light);
     }
 
-    private void queryPosts() {
+    protected void queryPosts(){
         ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
 
         query.include(Event.KEY_EVENT_NAME);
@@ -98,12 +97,12 @@ public class EventsFeedFragment extends Fragment {
         query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<Event>() {
             @Override
-            public void done(List<Event> posts, ParseException e) {
+            public void done(List<Event> feed, ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Issue with getting posts", e);
                     return;
                 }
-                events.addAll(posts);
+                events.addAll(feed);
                 adapter.notifyDataSetChanged();
             }
         });
