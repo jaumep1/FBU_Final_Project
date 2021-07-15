@@ -1,6 +1,7 @@
 package com.example.fbu_final_project.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -37,6 +38,19 @@ public class User extends ParseUser {
     }
     public void subscribe(Event event) {
         add(KEY_SUBSCRIPTIONS, event);
+    }
+    public void unsubscribe(Event event) {
+        ArrayList<Event> events = (ArrayList<Event>) get(KEY_SUBSCRIPTIONS);
+        ArrayList<Event> newEventList = new ArrayList<>();
+        for (Event e : events) {
+            if (!e.getObjectId().equals(event.getObjectId())) {
+                newEventList.add(e);
+            }
+        }
+        put(KEY_SUBSCRIPTIONS, newEventList);
+    }
+    public ArrayList<Event> getSubscriptions() {
+        return ((ArrayList<Event>) get(KEY_SUBSCRIPTIONS));
     }
     public void createSubs() {
         put(KEY_SUBSCRIPTIONS, new ArrayList<Event>());

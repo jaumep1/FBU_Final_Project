@@ -44,7 +44,6 @@ public class EventsFeedAdapter extends RecyclerView.Adapter<EventsFeedAdapter.Vi
         return events.size();
     }
 
-
     public void clear() {
         events.clear();
         notifyDataSetChanged();

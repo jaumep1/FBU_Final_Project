@@ -1,5 +1,7 @@
 package com.example.fbu_final_project.models;
 
+import android.util.Log;
+
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
@@ -74,8 +76,19 @@ public class Event extends ParseObject {
         add(KEY_ATTENDEES, user);
     }
 
-    public ParseObject getAttendees() {
-        return getParseObject(KEY_ATTENDEES);
+    public void unsubscribe(User user) {
+        ArrayList<User> users = (ArrayList<User>) get(KEY_ATTENDEES);
+        ArrayList<User> newUserList = new ArrayList<>();
+        for (User u : users) {
+            if (!u.getObjectId().equals(user.getObjectId())) {
+                newUserList.add(u);
+            }
+        }
+        put(KEY_ATTENDEES, newUserList);
+    }
+
+    public ArrayList<Event> getAttendees() {
+        return ((ArrayList<Event>) get(KEY_ATTENDEES));
     }
 
 
