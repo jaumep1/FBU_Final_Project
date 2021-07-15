@@ -103,61 +103,13 @@
             android:layout_alignParentTop="true"
             android:text="@string/tags" />
 
-        <CheckBox
-            android:id="@+id/cbSportsTag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <GridView
+            android:id="@+id/gvTags"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
             android:layout_below="@id/tagsHeader"
-            android:layout_marginStart="16dp"
-            android:text="@string/sports" />
+            android:layout_marginTop="5dp" />
 
-        <CheckBox
-            android:id="@+id/cbMusicTag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tagsHeader"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_toEndOf="@id/cbSportsTag"
-            android:text="@string/music" />
-
-        <CheckBox
-            android:id="@+id/cbArtTag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tagsHeader"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="16dp"
-            android:layout_toEndOf="@+id/cbMusicTag"
-            android:text="@string/art" />
-
-        <CheckBox
-            android:id="@+id/cbTechTag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cbSportsTag"
-            android:layout_marginStart="16dp"
-            android:text="@string/tech" />
-
-        <CheckBox
-            android:id="@+id/cbClubTag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cbSportsTag"
-            android:layout_alignStart="@+id/cbMusicTag"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/club" />
-
-        <CheckBox
-            android:id="@+id/cbProfessionalTag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cbSportsTag"
-            android:layout_alignStart="@+id/cbArtTag"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/professional" />
     </RelativeLayout>
 
     <Button
