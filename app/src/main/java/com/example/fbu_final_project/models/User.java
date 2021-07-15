@@ -3,6 +3,8 @@ package com.example.fbu_final_project.models;
 import com.parse.ParseClassName;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
+
 @ParseClassName("_User")
 public class User extends ParseUser {
 
@@ -10,6 +12,7 @@ public class User extends ParseUser {
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_FIRSTNAME = "firstname";
     private static final String KEY_LASTNAME = "lastname";
+    private static final String KEY_SUBSCRIPTIONS = "subscriptions";
 
     public void setUsername(String username) {
         put(KEY_USERNAME, username);
@@ -19,9 +22,6 @@ public class User extends ParseUser {
     }
     public void setPassword(String password) {
         put(KEY_PASSWORD, password);
-    }
-    public String getPassword() {
-        return getString("password");
     }
     public void setFirstname(String firstname) {
         put(KEY_FIRSTNAME, firstname);
@@ -34,6 +34,12 @@ public class User extends ParseUser {
     }
     public String getLastname() {
         return getString("lastname");
+    }
+    public void subscribe(Event event) {
+        add(KEY_SUBSCRIPTIONS, event);
+    }
+    public void createSubs() {
+        put(KEY_SUBSCRIPTIONS, new ArrayList<Event>());
     }
 
 }

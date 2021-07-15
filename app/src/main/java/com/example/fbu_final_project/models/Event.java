@@ -5,6 +5,7 @@ import com.parse.ParseObject;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 @Parcel(analyze = Event.class)
@@ -16,6 +17,7 @@ public class Event extends ParseObject {
     public static final String KEY_EVENT_DESCRIPTION = "eventDescription";
     public static final String KEY_START_TIME = "startTime";
     public static final String KEY_END_TIME = "endTime";
+    public static final String KEY_ATTENDEES = "attendees";
 
     public String getCreator() {
         return getString(KEY_CREATED_BY);
@@ -62,6 +64,18 @@ public class Event extends ParseObject {
 
     public void setEndTime(Date end) {
         put(KEY_END_TIME, end);
+    }
+
+    public void createAttendees () {
+        put(KEY_ATTENDEES, new ArrayList<User>());
+    }
+
+    public void subscribe (User user) {
+        add(KEY_ATTENDEES, user);
+    }
+
+    public ParseObject getAttendees() {
+        return getParseObject(KEY_ATTENDEES);
     }
 
 

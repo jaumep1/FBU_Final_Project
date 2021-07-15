@@ -50,6 +50,8 @@ public class SignupActivity extends AppCompatActivity {
         user.setPassword(password);
         user.setFirstname(firstname);
         user.setLastname(lastname);
+        user.createSubs();
+
         // Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {

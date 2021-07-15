@@ -72,14 +72,12 @@ public class EventsFeedFragment extends Fragment {
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
                 adapter.clear();
                 queryPosts();
                 binding.swipeContainer.setRefreshing(false);
             }
         });
+
         // Configure the refreshing colors
         binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -88,29 +86,23 @@ public class EventsFeedFragment extends Fragment {
     }
 
     private void queryPosts() {
-        // specify what type of data we want to query - Post.class
         ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
-        // include data referred by user key
+
         query.include(Event.KEY_EVENT_NAME);
         query.include(Event.KEY_EVENT_DESCRIPTION);
         query.include(Event.KEY_AUTHOR);
         query.include(Event.KEY_START_TIME);
         query.include(Event.KEY_END_TIME);
-        // limit query to latest 20 items
+
         query.setLimit(20);
-        // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
-        // start an asynchronous call for posts
         query.findInBackground(new FindCallback<Event>() {
             @Override
             public void done(List<Event> posts, ParseException e) {
-                // check for errors
                 if (e != null) {
                     Log.e(TAG, "Issue with getting posts", e);
                     return;
                 }
-
-                // save received posts to list and notify adapter of new data
                 events.addAll(posts);
                 adapter.notifyDataSetChanged();
             }

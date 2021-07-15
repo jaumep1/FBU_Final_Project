@@ -34,6 +34,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -233,6 +234,8 @@ public class CreateFragment extends Fragment {
         ZonedDateTime end = LocalDateTime.of(endDate, endTime)
                 .atZone(ZoneId.systemDefault());
         event.setEndTime(Date.from(end.toInstant()));
+
+        event.createAttendees();
 
         event.saveInBackground(new SaveCallback() {
             @Override
