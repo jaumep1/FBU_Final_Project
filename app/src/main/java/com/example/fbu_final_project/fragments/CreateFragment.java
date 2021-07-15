@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
-import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.databinding.FragmentCreateBinding;
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.User;
@@ -34,7 +33,6 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 

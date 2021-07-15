@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fbu_final_project.EventDetailsActivity;
-import com.example.fbu_final_project.MainActivity;
 import com.example.fbu_final_project.databinding.ItemEventBinding;
 import com.example.fbu_final_project.models.Event;
 

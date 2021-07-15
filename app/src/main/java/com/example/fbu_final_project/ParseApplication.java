@@ -6,7 +6,6 @@ import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.User;
 import com.parse.Parse;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 
 public class ParseApplication extends Application {
 

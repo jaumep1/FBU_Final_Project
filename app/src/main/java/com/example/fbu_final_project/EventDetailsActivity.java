@@ -3,21 +3,15 @@ package com.example.fbu_final_project;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.fbu_final_project.databinding.ActivityEventDetailsBinding;
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.User;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
@@ -49,6 +43,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                 user.subscribe(event);
                 event.saveInBackground();
                 user.saveInBackground();
+
+                Toast.makeText(EventDetailsActivity.this, "Subscribed!",
+                        Toast.LENGTH_SHORT).show();
 
 
             }
