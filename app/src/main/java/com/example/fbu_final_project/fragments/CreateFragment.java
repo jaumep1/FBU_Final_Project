@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +50,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CreateFragment extends Fragment {
 
@@ -300,7 +304,6 @@ public class CreateFragment extends Fragment {
 
         }
 
-
         event.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -310,16 +313,15 @@ public class CreateFragment extends Fragment {
                             Toast.LENGTH_SHORT).show();
                 }
                 Log.i(TAG, "Event save was successful!");
-                Toast.makeText(getContext(), "Event created!",
-                        Toast.LENGTH_SHORT).show();
                 binding.etEventName.setText("");
                 binding.etDescription.setText("");
                 binding.tvStartTime.setText("START TIME");
                 binding.tvStartDate.setText("START DATE");
                 binding.tvEndTime.setText("END TIME");
                 binding.tvEndDate.setText("END DATE");
+
+                MainActivity.finishCreatingEvent();
             }
         });
-
     }
 }
