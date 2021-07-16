@@ -14,11 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.example.fbu_final_project.MainActivity;
 import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.adapters.TagsAdapter;
 import com.example.fbu_final_project.databinding.FragmentCreateBinding;
@@ -74,8 +78,9 @@ public class CreateFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        LinearLayoutManager manager = new GridLayoutManager(getContext(), 3);
+        setHasOptionsMenu(true);
 
+        LinearLayoutManager manager = new GridLayoutManager(getContext(), 3);
 
         binding.rvTags.setLayoutManager(manager);
 
@@ -85,8 +90,14 @@ public class CreateFragment extends Fragment {
         binding.rvTags.setAdapter(adapter);
 
         queryTags();
-        Log.i("wakawaka", tags.toString());
+    }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem searchItem = menu.findItem(R.id.miSearch);
+        searchItem.setVisible(false);
+        getActivity().invalidateOptionsMenu();
     }
 
     private void queryTags() {

@@ -26,4 +26,5 @@
     <string name="club">Club</string>
     <string name="professional">Professional</string>
     <string name="add_image">Add Image</string>
-    </resources>
+    <string name="search">Search</string>
+</resources>
