@@ -103,11 +103,11 @@
             android:layout_alignParentTop="true"
             android:text="@string/tags" />
 
-        <GridView
-            android:id="@+id/gvTags"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTags"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_below="@id/tagsHeader"
+            android:layout_height="100dp"
+            android:layout_below="@+id/tagsHeader"
             android:layout_marginTop="5dp" />
 
     </RelativeLayout>

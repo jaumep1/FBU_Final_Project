@@ -3,6 +3,7 @@ package com.example.fbu_final_project;
 import android.app.Application;
 
 import com.example.fbu_final_project.models.Event;
+import com.example.fbu_final_project.models.Tag;
 import com.example.fbu_final_project.models.User;
 import com.parse.Parse;
 import com.parse.ParseObject;
@@ -16,6 +17,8 @@ public class ParseApplication extends Application {
         //Register parse models
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Event.class);
+        ParseObject.registerSubclass(Tag.class);
+
 
 
         Parse.initialize(new Parse.Configuration.Builder(this)

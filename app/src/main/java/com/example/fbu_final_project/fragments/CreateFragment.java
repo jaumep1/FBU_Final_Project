@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +19,14 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.example.fbu_final_project.adapters.TagsAdapter;
 import com.example.fbu_final_project.databinding.FragmentCreateBinding;
 import com.example.fbu_final_project.models.Event;
+import com.example.fbu_final_project.models.Tag;
 import com.example.fbu_final_project.models.User;
+import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -33,14 +39,18 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class CreateFragment extends Fragment {
 
     private static final String TAG = "CreateFragment";
 
     FragmentCreateBinding binding;
+    TagsAdapter adapter;
+    List<Tag> tags;
 
     public CreateFragment() {
         // Required empty public constructor
@@ -62,8 +72,39 @@ public class CreateFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setOnClickListeners();
 
+        LinearLayoutManager manager = new GridLayoutManager(getContext(), 3);
+
+
+        binding.rvTags.setLayoutManager(manager);
+
+        setOnClickListeners();
+        tags = new ArrayList<>();
+        adapter = new TagsAdapter(getContext(), tags);
+        binding.rvTags.setAdapter(adapter);
+
+        queryTags();
+        Log.i("wakawaka", tags.toString());
+
+    }
+
+    private void queryTags() {
+        ParseQuery<Tag> query = ParseQuery.getQuery(Tag.class);
+
+        query.include(Tag.KEY_TAG);
+        query.setLimit(20);
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<Tag>() {
+            @Override
+            public void done(List<Tag> tagList, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting posts", e);
+                    return;
+                }
+                tags.addAll(tagList);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void setOnClickListeners() {
