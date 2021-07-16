@@ -4,10 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.EventsFeedFragment">
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/rvTagsFilter"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp">
 
@@ -18,4 +20,10 @@
             android:layout_alignParentTop="true" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTagsFilter"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>
