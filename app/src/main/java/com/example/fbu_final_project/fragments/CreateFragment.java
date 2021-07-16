@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.adapters.TagsAdapter;
 import com.example.fbu_final_project.databinding.FragmentCreateBinding;
 import com.example.fbu_final_project.models.Event;
@@ -275,6 +276,19 @@ public class CreateFragment extends Fragment {
         event.setEndTime(Date.from(end.toInstant()));
 
         event.createAttendees();
+
+        event.createTags();
+
+        for (int i = 0; i < binding.rvTags.getChildCount(); i++) {
+            TagsAdapter.ViewHolder holder =
+                    (TagsAdapter.ViewHolder) binding.rvTags.findViewHolderForAdapterPosition(i);
+
+            if (holder.binding.cbTag.isChecked()) {
+                event.addTag(tags.get(i));
+            }
+
+        }
+
 
         event.saveInBackground(new SaveCallback() {
             @Override

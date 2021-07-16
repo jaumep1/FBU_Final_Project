@@ -44,7 +44,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ItemTagBinding binding;
+        public ItemTagBinding binding;
 
         public ViewHolder(ItemTagBinding binding) {
             super(binding.getRoot());

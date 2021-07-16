@@ -20,6 +20,7 @@ public class Event extends ParseObject {
     public static final String KEY_START_TIME = "startTime";
     public static final String KEY_END_TIME = "endTime";
     public static final String KEY_ATTENDEES = "attendees";
+    public static final String KEY_TAGS = "tags";
 
     public String getCreator() {
         return getString(KEY_CREATED_BY);
@@ -89,6 +90,14 @@ public class Event extends ParseObject {
 
     public ArrayList<Event> getAttendees() {
         return ((ArrayList<Event>) get(KEY_ATTENDEES));
+    }
+
+    public void createTags () {
+        put(KEY_TAGS, new ArrayList<Tag>());
+    }
+
+    public void addTag (Tag tag) {
+        add(KEY_TAGS, tag);
     }
 
 
