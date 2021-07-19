@@ -1,5 +1,6 @@
 package com.example.fbu_final_project.fragments;
 
+import android.gesture.Gesture;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,15 +9,18 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -77,6 +81,10 @@ public class EventsFeedFragment extends Fragment {
                         feedManager.getOrientation());
         binding.rvEvents.addItemDecoration(dividerItemDecoration);
 
+        tagsManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        tagsManager.canScrollHorizontally();
+        binding.rvTagsFilter.setLayoutManager(tagsManager);
+
         feedAdapter = new EventsFeedAdapter(getContext(), events);
         binding.rvEvents.setAdapter(feedAdapter);
 
@@ -84,14 +92,47 @@ public class EventsFeedFragment extends Fragment {
         binding.rvTagsFilter.setAdapter(tagsAdapter);
 
         queryTags();
-        queryPosts();
+        queryEvents();
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.i("word", String.valueOf(binding.rvTagsFilter.getChildCount()));
+                for (int i = 0; i < binding.rvTagsFilter.getChildCount(); i++) {
+                    TagsAdapter.ViewHolder holder =
+                            (TagsAdapter.ViewHolder) binding.rvTagsFilter.findViewHolderForAdapterPosition(i);
+
+                   holder.binding.cbTag.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View v) {
+                           filterEventsByTags();
+                       }
+                   });
+
+                }
+            }
+        };
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(runnable, 1000); // run in 1 second
+
+
+
+
 
         // Setup refresh listener which triggers new data loading
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 feedAdapter.clear();
-                queryPosts();
+                queryEvents();
+                for (int i = 0; i < binding.rvTagsFilter.getChildCount(); i++) {
+                    TagsAdapter.ViewHolder holder =
+                            (TagsAdapter.ViewHolder) binding.rvTagsFilter.findViewHolderForAdapterPosition(i);
+
+                    holder.binding.cbTag.setChecked(false);
+
+                }
                 binding.swipeContainer.setRefreshing(false);
             }
         });
@@ -130,7 +171,7 @@ public class EventsFeedFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                queryPosts();
+                queryEvents();
                 return true;
             }
         });
@@ -150,9 +191,6 @@ public class EventsFeedFragment extends Fragment {
                     return;
                 }
                 tags.addAll(tagList);
-                tagsManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
-                tagsManager.canScrollHorizontally();
-                binding.rvTagsFilter.setLayoutManager(tagsManager);
                 tagsAdapter.notifyDataSetChanged();
             }
         });
@@ -192,12 +230,55 @@ public class EventsFeedFragment extends Fragment {
                 events.clear();
                 events.addAll(feed);
                 feedAdapter.notifyDataSetChanged();
-                Log.i("waka", events.toString());
             }
         });
     }
 
-    protected void queryPosts(){
+    public void filterEventsByTags() {
+        List<Tag> activeTags = new ArrayList<>();
+
+        for (int i = 0; i < binding.rvTagsFilter.getChildCount(); i++) {
+            TagsAdapter.ViewHolder holder =
+                    (TagsAdapter.ViewHolder) binding.rvTagsFilter.findViewHolderForAdapterPosition(i);
+
+            if (holder.binding.cbTag.isChecked()) {
+                activeTags.add(tags.get(i));
+            }
+
+        }
+
+        if (activeTags.isEmpty()) {
+            queryEvents();
+            return;
+        }
+
+        ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
+
+        query.whereContainedIn(Event.KEY_TAGS, activeTags);
+
+        query.include(Event.KEY_EVENT_NAME);
+        query.include(Event.KEY_EVENT_DESCRIPTION);
+        query.include(Event.KEY_AUTHOR);
+        query.include(Event.KEY_START_TIME);
+        query.include(Event.KEY_END_TIME);
+
+        query.setLimit(20);
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<Event>() {
+            @Override
+            public void done(List<Event> feed, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting posts", e);
+                    return;
+                }
+                events.clear();
+                events.addAll(feed);
+                feedAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    protected void queryEvents(){
         ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
 
         query.include(Event.KEY_EVENT_NAME);

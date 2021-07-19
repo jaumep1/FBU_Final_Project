@@ -1,7 +1,6 @@
 package com.example.fbu_final_project.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     Context context;
     List<Tag> tags;
 
-    public TagsAdapter (Context context, List<Tag> tags) {
+    public TagsAdapter(Context context, List<Tag> tags) {
         this.context = context;
         this.tags = tags;
     }
@@ -35,7 +34,6 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull TagsAdapter.ViewHolder holder, int position) {
         Tag tag = tags.get(position);
         holder.bind(tag);
-        Log.i("wakawaka", tags.toString());
     }
 
     @Override
@@ -43,19 +41,13 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
         return tags.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
         public ItemTagBinding binding;
 
         public ViewHolder(ItemTagBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            binding.cbTag.setChecked(!binding.cbTag.isChecked());
         }
 
         public void bind(Tag tag) {

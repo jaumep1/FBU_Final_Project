@@ -14,7 +14,7 @@ public class PersonalEventsFragment extends EventsFeedFragment {
     private static final String TAG = "PersonalEventsFragment";
 
     @Override
-    protected void queryPosts() {
+    protected void queryEvents() {
         ArrayList<Event> subs = (ArrayList<Event>) (ParseUser.getCurrentUser()).get("subscriptions");
         for (Event sub : subs) {
             ParseQuery<Event> query = ParseQuery.getQuery(Event.class);

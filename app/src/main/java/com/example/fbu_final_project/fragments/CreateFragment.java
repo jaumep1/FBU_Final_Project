@@ -50,8 +50,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class CreateFragment extends Fragment {
 
@@ -82,18 +80,18 @@ public class CreateFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        queryTags();
+
         setHasOptionsMenu(true);
 
         LinearLayoutManager manager = new GridLayoutManager(getContext(), 3);
 
         binding.rvTags.setLayoutManager(manager);
 
-        setOnClickListeners();
         tags = new ArrayList<>();
         adapter = new TagsAdapter(getContext(), tags);
         binding.rvTags.setAdapter(adapter);
-
-        queryTags();
+        setOnClickListeners();
     }
 
     @Override
