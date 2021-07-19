@@ -2,6 +2,8 @@ package com.example.fbu_final_project;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -9,6 +11,7 @@ import android.widget.Toast;
 import com.example.fbu_final_project.databinding.ActivityEventDetailsBinding;
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.User;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
@@ -18,7 +21,6 @@ import java.util.ArrayList;
 public class EventDetailsActivity extends AppCompatActivity {
 
     Event event;
-    private String TAG = "EventDetailsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,14 @@ public class EventDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        binding.fabAddToCal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: INTENT GOES HERE
+            }
+        });
+        binding.fabAddToCal.setVisibility(View.INVISIBLE);
     }
 
     private boolean isSubscribed() {
