@@ -8,6 +8,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -21,8 +22,10 @@ import android.view.ViewGroup;
 
 import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.adapters.EventsFeedAdapter;
+import com.example.fbu_final_project.adapters.TagsAdapter;
 import com.example.fbu_final_project.databinding.FragmentEventsFeedBinding;
 import com.example.fbu_final_project.models.Event;
+import com.example.fbu_final_project.models.Tag;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -35,7 +38,11 @@ public class EventsFeedFragment extends Fragment {
     private static final String TAG = "EventsFeedFragment";
     FragmentEventsFeedBinding binding;
     List<Event> events;
-    EventsFeedAdapter adapter;
+    List<Tag> tags;
+    EventsFeedAdapter feedAdapter;
+    TagsAdapter tagsAdapter;
+    LinearLayoutManager feedManager;
+    LinearLayoutManager tagsManager;
 
     public EventsFeedFragment() {
         // Required empty public constructor
@@ -57,28 +64,33 @@ public class EventsFeedFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        events = new ArrayList<>();
+        tags = new ArrayList<>();
+
         setHasOptionsMenu(true);
 
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-
-        binding.rvEvents.setLayoutManager(manager);
+        feedManager = new LinearLayoutManager(getContext());
+        binding.rvEvents.setLayoutManager(feedManager);
 
         DividerItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(binding.rvEvents.getContext(),
-                        manager.getOrientation());
+                        feedManager.getOrientation());
         binding.rvEvents.addItemDecoration(dividerItemDecoration);
 
-        events = new ArrayList<>();
+        feedAdapter = new EventsFeedAdapter(getContext(), events);
+        binding.rvEvents.setAdapter(feedAdapter);
 
-        adapter = new EventsFeedAdapter(getContext(), events);
-        binding.rvEvents.setAdapter(adapter);
+        tagsAdapter = new TagsAdapter(getContext(), tags);
+        binding.rvTagsFilter.setAdapter(tagsAdapter);
+
+        queryTags();
         queryPosts();
 
         // Setup refresh listener which triggers new data loading
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                adapter.clear();
+                feedAdapter.clear();
                 queryPosts();
                 binding.swipeContainer.setRefreshing(false);
             }
@@ -124,6 +136,28 @@ public class EventsFeedFragment extends Fragment {
         });
     }
 
+    private void queryTags() {
+        ParseQuery<Tag> query = ParseQuery.getQuery(Tag.class);
+
+        query.include(Tag.KEY_TAG);
+        query.setLimit(20);
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<Tag>() {
+            @Override
+            public void done(List<Tag> tagList, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting tags", e);
+                    return;
+                }
+                tags.addAll(tagList);
+                tagsManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+                tagsManager.canScrollHorizontally();
+                binding.rvTagsFilter.setLayoutManager(tagsManager);
+                tagsAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     private void filterEvents(String search) {
         ParseQuery<Event> queryName = ParseQuery.getQuery(Event.class);
         ParseQuery<Event> queryDescription = ParseQuery.getQuery(Event.class);
@@ -157,7 +191,7 @@ public class EventsFeedFragment extends Fragment {
                 }
                 events.clear();
                 events.addAll(feed);
-                adapter.notifyDataSetChanged();
+                feedAdapter.notifyDataSetChanged();
                 Log.i("waka", events.toString());
             }
         });
@@ -183,7 +217,7 @@ public class EventsFeedFragment extends Fragment {
                 }
                 events.clear();
                 events.addAll(feed);
-                adapter.notifyDataSetChanged();
+                feedAdapter.notifyDataSetChanged();
             }
         });
     }

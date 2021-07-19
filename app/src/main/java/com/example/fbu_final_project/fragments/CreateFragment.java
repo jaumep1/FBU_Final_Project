@@ -114,7 +114,7 @@ public class CreateFragment extends Fragment {
             @Override
             public void done(List<Tag> tagList, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, "Issue with getting posts", e);
+                    Log.e(TAG, "Issue with getting tags", e);
                     return;
                 }
                 tags.addAll(tagList);

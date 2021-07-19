@@ -36,7 +36,7 @@ public class PersonalEventsFragment extends EventsFeedFragment {
                         return;
                     }
                     events.addAll(feed);
-                    adapter.notifyDataSetChanged();
+                    feedAdapter.notifyDataSetChanged();
                 }
             });
 

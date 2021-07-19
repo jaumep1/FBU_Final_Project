@@ -35,6 +35,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull TagsAdapter.ViewHolder holder, int position) {
         Tag tag = tags.get(position);
         holder.bind(tag);
+        Log.i("wakawaka", tags.toString());
     }
 
     @Override
