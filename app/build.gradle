@@ -46,14 +46,7 @@ dependencies {
     implementation 'org.parceler:parceler-api:1.1.12'
     annotationProcessor 'org.parceler:parceler:1.1.12'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.google.android.gms:play-services-auth:15.0.1'
-    implementation 'pub.devrel:easypermissions:0.3.0'
-    implementation('com.google.api-client:google-api-client-android:1.23.0') {
-        exclude group: 'org.apache.httpcomponents'
-    }
+    implementation 'com.google.api-client:google-api-client:1.23.0'
     implementation 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
-    implementation ('com.google.apis:google-api-services-calendar:v3-rev305-1.23.0') {
-        exclude group: 'org.apache.httpcomponents'
-    }
+    implementation 'com.google.apis:google-api-services-calendar:v3-rev305-1.23.0'
 }
