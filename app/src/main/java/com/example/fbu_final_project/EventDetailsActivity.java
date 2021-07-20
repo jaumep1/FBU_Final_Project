@@ -32,7 +32,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         event = Parcels.unwrap(getIntent().getParcelableExtra(Event.class.getSimpleName()));
 
-        binding.tvAuthor.setText(event.getAuthor());
+        binding.tvAuthor.setText(String.format("Created by: %s", event.getAuthor()));
         binding.tvDescription.setText(event.getDescription());
         binding.tvName.setText(event.getName());
         binding.tvTime.setText(String.format("%s - %s", event.getStartTime(), event.getEndTime()));

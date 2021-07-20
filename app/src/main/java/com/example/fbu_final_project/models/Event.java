@@ -100,5 +100,9 @@ public class Event extends ParseObject {
         add(KEY_TAGS, tag);
     }
 
+    public ArrayList<Tag> getTags() {
+        return ((ArrayList<Tag>) get(KEY_TAGS));
+    }
+
 
 }

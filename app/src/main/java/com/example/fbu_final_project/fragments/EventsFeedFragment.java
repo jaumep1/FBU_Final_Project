@@ -42,6 +42,7 @@ public class EventsFeedFragment extends Fragment {
     private static final String TAG = "EventsFeedFragment";
     FragmentEventsFeedBinding binding;
     List<Event> events;
+    List<Event> activeEvents;
     List<Tag> tags;
     EventsFeedAdapter feedAdapter;
     TagsAdapter tagsAdapter;
@@ -69,6 +70,7 @@ public class EventsFeedFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         events = new ArrayList<>();
+        activeEvents = new ArrayList<>();
         tags = new ArrayList<>();
 
         setHasOptionsMenu(true);
@@ -85,7 +87,7 @@ public class EventsFeedFragment extends Fragment {
         tagsManager.canScrollHorizontally();
         binding.rvTagsFilter.setLayoutManager(tagsManager);
 
-        feedAdapter = new EventsFeedAdapter(getContext(), events);
+        feedAdapter = new EventsFeedAdapter(getContext(), activeEvents);
         binding.rvEvents.setAdapter(feedAdapter);
 
         tagsAdapter = new TagsAdapter(getContext(), tags);
@@ -97,7 +99,6 @@ public class EventsFeedFragment extends Fragment {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Log.i("word", String.valueOf(binding.rvTagsFilter.getChildCount()));
                 for (int i = 0; i < binding.rvTagsFilter.getChildCount(); i++) {
                     TagsAdapter.ViewHolder holder =
                             (TagsAdapter.ViewHolder) binding.rvTagsFilter.findViewHolderForAdapterPosition(i);
@@ -171,7 +172,9 @@ public class EventsFeedFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                queryEvents();
+                activeEvents.clear();
+                activeEvents.addAll(events);
+                feedAdapter.notifyDataSetChanged();
                 return true;
             }
         });
@@ -197,42 +200,21 @@ public class EventsFeedFragment extends Fragment {
     }
 
     private void filterEvents(String search) {
-        ParseQuery<Event> queryName = ParseQuery.getQuery(Event.class);
-        ParseQuery<Event> queryDescription = ParseQuery.getQuery(Event.class);
-        ParseQuery<Event> queryAuthor = ParseQuery.getQuery(Event.class);
 
-        queryName.whereContains(Event.KEY_EVENT_NAME, search);
-        queryDescription.whereContains(Event.KEY_EVENT_DESCRIPTION, search);
-        queryAuthor.whereContains(Event.KEY_AUTHOR, search);
-
-        List<ParseQuery<Event>> queries = new ArrayList<>();
-        queries.add(queryName);
-        queries.add(queryDescription);
-        queries.add(queryAuthor);
-
-
-        ParseQuery<Event> mainQuery = ParseQuery.or(queries);
-        mainQuery.include(Event.KEY_EVENT_NAME);
-        mainQuery.include(Event.KEY_EVENT_DESCRIPTION);
-        mainQuery.include(Event.KEY_AUTHOR);
-        mainQuery.include(Event.KEY_START_TIME);
-        mainQuery.include(Event.KEY_END_TIME);
-
-        mainQuery.setLimit(20);
-        mainQuery.addDescendingOrder("createdAt");
-        mainQuery.findInBackground(new FindCallback<Event>() {
-            @Override
-            public void done(List<Event> feed, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting posts", e);
-                    return;
-                }
-                events.clear();
-                events.addAll(feed);
-                feedAdapter.notifyDataSetChanged();
+        activeEvents.clear();
+        for (Event event : events) {
+            if (event.getName().contains(search)) {
+                activeEvents.add(event);
+            } else if (event.getDescription().contains(search)) {
+                activeEvents.add(event);
+            } else if (event.getAuthor().contains(search)) {
+                activeEvents.add(event);
             }
-        });
+        }
+        feedAdapter.notifyDataSetChanged();
+
     }
+
 
     public void filterEventsByTags() {
         List<Tag> activeTags = new ArrayList<>();
@@ -248,34 +230,32 @@ public class EventsFeedFragment extends Fragment {
         }
 
         if (activeTags.isEmpty()) {
-            queryEvents();
+            activeEvents.clear();
+            activeEvents.addAll(events);
+            feedAdapter.notifyDataSetChanged();
             return;
         }
 
-        ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
-
-        query.whereContainedIn(Event.KEY_TAGS, activeTags);
-
-        query.include(Event.KEY_EVENT_NAME);
-        query.include(Event.KEY_EVENT_DESCRIPTION);
-        query.include(Event.KEY_AUTHOR);
-        query.include(Event.KEY_START_TIME);
-        query.include(Event.KEY_END_TIME);
-
-        query.setLimit(20);
-        query.addDescendingOrder("createdAt");
-        query.findInBackground(new FindCallback<Event>() {
-            @Override
-            public void done(List<Event> feed, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting posts", e);
-                    return;
+        activeEvents.clear();
+        for (Event event : events) {
+            List<Tag> eventTags = event.getTags();
+            if (eventTags != null) {
+                for (Tag eventTag : eventTags) {
+                    if (activeEvents.contains(event)) {
+                        break;
+                    }
+                    for (Tag activeTag : activeTags) {
+                        if (eventTag.getObjectId().equals(activeTag.getObjectId())) {
+                            activeEvents.add(event);
+                            break;
+                        }
+                    }
                 }
-                events.clear();
-                events.addAll(feed);
-                feedAdapter.notifyDataSetChanged();
             }
-        });
+        }
+
+        feedAdapter.notifyDataSetChanged();
+
     }
 
     protected void queryEvents(){
@@ -293,11 +273,13 @@ public class EventsFeedFragment extends Fragment {
             @Override
             public void done(List<Event> feed, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, "Issue with getting posts", e);
+                    Log.e(TAG, "Issue with getting events", e);
                     return;
                 }
                 events.clear();
                 events.addAll(feed);
+                activeEvents.clear();
+                activeEvents.addAll(events);
                 feedAdapter.notifyDataSetChanged();
             }
         });
