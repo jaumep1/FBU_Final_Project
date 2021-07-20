@@ -1,7 +1,8 @@
-package com.example.fbu_final_project;
+package com.example.fbu_final_project.applications;
 
 import android.app.Application;
 
+import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.Tag;
 import com.example.fbu_final_project.models.User;

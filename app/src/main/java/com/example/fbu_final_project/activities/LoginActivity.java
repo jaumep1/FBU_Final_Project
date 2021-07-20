@@ -1,4 +1,4 @@
-package com.example.fbu_final_project;
+package com.example.fbu_final_project.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
