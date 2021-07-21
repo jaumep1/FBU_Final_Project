@@ -1,7 +1,6 @@
 package com.example.fbu_final_project.models;
 
 import com.parse.ParseClassName;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;

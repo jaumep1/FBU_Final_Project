@@ -1,39 +1,36 @@
 package com.example.fbu_final_project.activities;
 
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.databinding.ActivityEventDetailsBinding;
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.User;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApi;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.calendar.Calendar;
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.EventDateTime;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
-import java.io.File;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
@@ -113,6 +110,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -126,19 +124,43 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            Log.i(TAG, account.toString());
+            Log.i(TAG, account.getGrantedScopes().toString());
 
-            // Signed in successfully, show authenticated UI.
-            //updateUI(account);
-        } catch (ApiException e) {
+            com.google.api.services.calendar.model.Event calItem = createCalItem(event);
+            Log.i("waka", calItem.toPrettyString());
+
+
+        } catch (ApiException | IOException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            //updateUI(null);
+            Log.e(TAG, "signInResult:failed code", e);
         }
+    }
+
+    private com.google.api.services.calendar.model.Event createCalItem(Event e) {
+        com.google.api.services.calendar.model.Event calItem =
+                new com.google.api.services.calendar.model.Event()
+                .setSummary(event.getName())
+                .setDescription(event.getDescription());
+
+        DateTime startDateTime = new DateTime(event.getStartTime());
+        EventDateTime start = new EventDateTime()
+                .setDateTime(startDateTime)
+                .setTimeZone(Calendar.getInstance().getTimeZone().toString());
+        calItem.setStart(start);
+
+        DateTime endDateTime = new DateTime(event.getEndTime());
+        EventDateTime end = new EventDateTime()
+                .setDateTime(endDateTime)
+                .setTimeZone(Calendar.getInstance().getTimeZone().toString());
+        calItem.setEnd(end);
+
+        return calItem;
+
     }
 
     private boolean isSubscribed() {

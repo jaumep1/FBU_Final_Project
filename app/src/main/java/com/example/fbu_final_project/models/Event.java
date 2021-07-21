@@ -1,7 +1,5 @@
 package com.example.fbu_final_project.models;
 
-import android.util.Log;
-
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 

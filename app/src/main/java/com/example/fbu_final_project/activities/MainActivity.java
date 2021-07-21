@@ -1,10 +1,5 @@
 package com.example.fbu_final_project.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.example.fbu_final_project.R;
-import com.example.fbu_final_project.activities.LoginActivity;
 import com.example.fbu_final_project.databinding.ActivityMainBinding;
 import com.example.fbu_final_project.fragments.CreateFragment;
 import com.example.fbu_final_project.fragments.EventsFeedFragment;
