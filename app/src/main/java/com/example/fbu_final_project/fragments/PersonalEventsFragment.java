@@ -2,6 +2,7 @@ package com.example.fbu_final_project.fragments;
 
 import android.util.Log;
 import com.example.fbu_final_project.models.Event;
+import com.example.fbu_final_project.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -15,9 +16,12 @@ public class PersonalEventsFragment extends EventsFeedFragment {
 
     @Override
     protected void queryEvents() {
-        ArrayList<Event> subs = (ArrayList<Event>) (ParseUser.getCurrentUser()).get("subscriptions");
-        for (Event sub : subs) {
-            ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
+        events.clear();
+        activeEvents.clear();
+
+        ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
+
+        for (Event sub : ((User) ParseUser.getCurrentUser()).getSubscriptions()) {
 
             query.include(Event.KEY_EVENT_NAME);
             query.include(Event.KEY_EVENT_DESCRIPTION);
@@ -25,21 +29,23 @@ public class PersonalEventsFragment extends EventsFeedFragment {
             query.include(Event.KEY_START_TIME);
             query.include(Event.KEY_END_TIME);
 
-            query.whereEqualTo("objectId", sub.getObjectId());
+            query.whereEqualTo(Event.KEY_OBJECT_ID, sub.getObjectId());
 
+            query.setLimit(20);
             query.addDescendingOrder("createdAt");
             query.findInBackground(new FindCallback<Event>() {
                 @Override
                 public void done(List<Event> feed, ParseException e) {
                     if (e != null) {
-                        Log.e(TAG, "Issue with getting posts", e);
+                        Log.e(TAG, "Issue with getting events", e);
                         return;
                     }
+                    Log.i("waka", String.valueOf(feed.size()));
                     events.addAll(feed);
+                    activeEvents.addAll(feed);
                     feedAdapter.notifyDataSetChanged();
                 }
             });
-
         }
     }
 }

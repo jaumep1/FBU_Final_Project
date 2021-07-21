@@ -37,9 +37,9 @@ public class EventsFeedFragment extends Fragment {
 
     private static final String TAG = "EventsFeedFragment";
     FragmentEventsFeedBinding binding;
-    List<Event> events;
-    List<Event> activeEvents;
-    List<Tag> tags;
+    List<Event> events = new ArrayList<>();
+    List<Event> activeEvents = new ArrayList<>();
+    List<Tag> tags = new ArrayList<>();
     EventsFeedAdapter feedAdapter;
     TagsAdapter tagsAdapter;
     LinearLayoutManager feedManager;
@@ -64,10 +64,6 @@ public class EventsFeedFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        events = new ArrayList<>();
-        activeEvents = new ArrayList<>();
-        tags = new ArrayList<>();
 
         setHasOptionsMenu(true);
 
@@ -275,7 +271,7 @@ public class EventsFeedFragment extends Fragment {
                 events.clear();
                 events.addAll(feed);
                 activeEvents.clear();
-                activeEvents.addAll(events);
+                activeEvents.addAll(feed);
                 feedAdapter.notifyDataSetChanged();
             }
         });
