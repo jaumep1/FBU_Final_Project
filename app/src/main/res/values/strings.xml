@@ -27,4 +27,6 @@
     <string name="professional">Professional</string>
     <string name="add_image">Add Image</string>
     <string name="search">Search</string>
+    <string name="unsubscribe">Unsubscribe</string>
+    <string name="subscribe">Subscribe</string>
 </resources>

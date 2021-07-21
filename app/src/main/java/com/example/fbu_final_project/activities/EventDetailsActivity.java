@@ -6,8 +6,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
@@ -18,9 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.databinding.ActivityEventDetailsBinding;
 import com.example.fbu_final_project.models.Event;
-import com.example.fbu_final_project.models.Tag;
 import com.example.fbu_final_project.models.User;
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
@@ -44,7 +42,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -52,30 +49,15 @@ import java.util.List;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 20;
-    private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String TAG = "EventDetailsActivity";
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
-//    final HttpTransport transport = AndroidHttp.newCompatibleTransport();
-//    final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
     private static final String APPLICATION_NAME = "Google Calendar API Java Quickstart";
 
-
-
-
-//    GoogleAccountCredential credential;
-//    com.google.api.services.calendar.Calendar client;
-
     Event event;
-
-
-
-//    GoogleSignInOptions gso;
-//    GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +95,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                     Toast.makeText(EventDetailsActivity.this, "Unsubscribed!",
                             Toast.LENGTH_SHORT).show();
-                    binding.btnSubscribe.setText("Subscribe");
+                    binding.btnSubscribe.setText(R.string.subscribe);
                 } else {
                     event.subscribe(user);
                     user.subscribe(event);
@@ -122,7 +104,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                     Toast.makeText(EventDetailsActivity.this, "Subscribed!",
                             Toast.LENGTH_SHORT).show();
-                    binding.btnSubscribe.setText("Unsubscribe");
+                    binding.btnSubscribe.setText(R.string.unsubscribe);
                 }
             }
         });
@@ -157,30 +139,17 @@ public class EventDetailsActivity extends AppCompatActivity {
                            .build();
 
                    com.google.api.services.calendar.model.Event calItem = createCalItem(event);
+                   Log.i("waka", calItem.toPrettyString());
                    String calendarId = "primary";
                    calItem = service.events().insert(calendarId, calItem).execute();
                    System.out.printf("Event created: %s\n", calItem.getHtmlLink());
-//            Log.i("waka", calItem.toPrettyString());
+                   Toast.makeText(getApplicationContext(), "Event added to calendar!",
+                           Toast.LENGTH_SHORT).show();
                } catch (IOException e) {
+                   Toast.makeText(getApplicationContext(), "Error in adding event to calendar",
+                           Toast.LENGTH_SHORT).show();
                    e.printStackTrace();
                }
-
-
-//
-//            account.requestExtraScopes();
-//
-//
-
-
-
-//               gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                       .requestScopes(new Scope(Scopes.DRIVE_APPS))
-//                       .requestEmail()
-//                       .build();
-//
-//               mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), gso);
-//
-//               signIn();
            }
        });
     }
@@ -198,7 +167,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 File.separator + TOKENS_DIRECTORY_PATH;
 
         File dir = new File(filePath);
-        if(dir.isDirectory()==false || !dir.exists()){
+        if(!dir.isDirectory() || !dir.exists()){
             dir.mkdirs();
         }
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
@@ -211,7 +180,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
 
         AuthorizationCodeInstalledApp ab = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()){
-            protected void onAuthorization(AuthorizationCodeRequestUrl authorizationUrl) throws IOException {
+            protected void onAuthorization(AuthorizationCodeRequestUrl authorizationUrl) {
                 String url = (authorizationUrl.build());
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(browserIntent);
@@ -225,48 +194,6 @@ public class EventDetailsActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(EventDetailsActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED);
     }
-//    private void signIn() {
-//        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-//        startActivityForResult(signInIntent, RC_SIGN_IN);
-//    }
-
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-//        if (requestCode == RC_SIGN_IN) {
-//            // The Task returned from this call is always completed, no need to attach
-//            // a listener.
-//            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-//            handleSignInResult(task);
-//        }
-//    }
-//
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-//        try {
-//            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-//            Log.i(TAG, account.getGrantedScopes().toString());
-//
-//            com.google.api.services.calendar.model.Event calItem = createCalItem(event);
-//
-//            account.requestExtraScopes();
-//
-//
-//            String calendarId = "primary";
-//            //calItem = service.events().insert(calendarId, calItem).execute();
-//            System.out.printf("Event created: %s\n", calItem.getHtmlLink());
-//            Log.i("waka", calItem.toPrettyString());
-//
-//
-//        } catch (ApiException | IOException e) {
-//            // The ApiException status code indicates the detailed failure reason.
-//            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-//            Log.e(TAG, "signInResult:failed code", e);
-//        }
-//    }
 
     private com.google.api.services.calendar.model.Event createCalItem(Event e) {
         com.google.api.services.calendar.model.Event calItem =
@@ -276,18 +203,15 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         DateTime startDateTime = new DateTime(event.getStartTime());
         EventDateTime start = new EventDateTime()
-                .setDateTime(startDateTime)
-                .setTimeZone(Calendar.getInstance().getTimeZone().toString());
+                .setDateTime(startDateTime);
         calItem.setStart(start);
 
         DateTime endDateTime = new DateTime(event.getEndTime());
         EventDateTime end = new EventDateTime()
-                .setDateTime(endDateTime)
-                .setTimeZone(Calendar.getInstance().getTimeZone().toString());
+                .setDateTime(endDateTime);
         calItem.setEnd(end);
 
         return calItem;
-
     }
 
     private boolean isSubscribed() {
