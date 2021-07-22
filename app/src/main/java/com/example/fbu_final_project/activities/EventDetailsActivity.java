@@ -49,6 +49,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import static com.parse.Parse.getApplicationContext;
+
 public class EventDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "EventDetailsActivity";
@@ -114,7 +116,13 @@ public class EventDetailsActivity extends AppCompatActivity {
            @RequiresApi(api = Build.VERSION_CODES.O)
            @Override
            public void onClick(View v) {
-               client.createCalendarEvent(EventDetailsActivity.this, event);
+               try {
+                   client.createCalendarEvent(EventDetailsActivity.this, event);
+               } catch (IOException e) {
+                   Toast.makeText(getApplicationContext(), "Error adding event to calendar",
+                           Toast.LENGTH_SHORT).show();
+                   e.printStackTrace();
+               }
            }
        });
     }

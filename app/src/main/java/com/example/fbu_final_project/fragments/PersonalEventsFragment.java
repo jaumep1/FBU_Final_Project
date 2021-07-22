@@ -21,31 +21,35 @@ public class PersonalEventsFragment extends EventsFeedFragment {
 
         ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
 
+        ArrayList<String> eventIds = new ArrayList<>();
+
         for (Event sub : ((User) ParseUser.getCurrentUser()).getSubscriptions()) {
-
-            query.include(Event.KEY_EVENT_NAME);
-            query.include(Event.KEY_EVENT_DESCRIPTION);
-            query.include(Event.KEY_AUTHOR);
-            query.include(Event.KEY_START_TIME);
-            query.include(Event.KEY_END_TIME);
-
-            query.whereEqualTo(Event.KEY_OBJECT_ID, sub.getObjectId());
-
-            query.setLimit(20);
-            query.addDescendingOrder("createdAt");
-            query.findInBackground(new FindCallback<Event>() {
-                @Override
-                public void done(List<Event> feed, ParseException e) {
-                    if (e != null) {
-                        Log.e(TAG, "Issue with getting events", e);
-                        return;
-                    }
-                    Log.i("waka", String.valueOf(feed.size()));
-                    events.addAll(feed);
-                    activeEvents.addAll(feed);
-                    feedAdapter.notifyDataSetChanged();
-                }
-            });
+            eventIds.add(sub.getObjectId());
         }
+
+        query.include(Event.KEY_EVENT_NAME);
+        query.include(Event.KEY_EVENT_DESCRIPTION);
+        query.include(Event.KEY_AUTHOR);
+        query.include(Event.KEY_START_TIME);
+        query.include(Event.KEY_END_TIME);
+
+
+        query.whereContainedIn(Event.KEY_OBJECT_ID, eventIds);
+
+        query.setLimit(20);
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<Event>() {
+            @Override
+            public void done(List<Event> feed, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting events", e);
+                    return;
+                }
+                Log.i("waka", String.valueOf(feed.size()));
+                events.addAll(feed);
+                activeEvents.addAll(feed);
+                feedAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }

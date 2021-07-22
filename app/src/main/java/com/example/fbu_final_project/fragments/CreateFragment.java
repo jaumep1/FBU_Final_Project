@@ -25,6 +25,7 @@ import android.widget.TimePicker;
 import com.example.fbu_final_project.activities.MainActivity;
 import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.adapters.TagsAdapter;
+import com.example.fbu_final_project.applications.GoogleApplication;
 import com.example.fbu_final_project.databinding.FragmentCreateBinding;
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.Tag;
@@ -38,6 +39,7 @@ import com.parse.SaveCallback;
 import android.text.format.DateFormat;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -49,6 +51,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.parse.Parse.getApplicationContext;
+
 public class CreateFragment extends Fragment {
 
     private static final String TAG = "CreateFragment";
@@ -56,6 +60,8 @@ public class CreateFragment extends Fragment {
     FragmentCreateBinding binding;
     TagsAdapter adapter;
     List<Tag> tags;
+
+    GoogleApplication client;
 
     public CreateFragment() {
         // Required empty public constructor
@@ -77,6 +83,8 @@ public class CreateFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        client = new GoogleApplication();
 
         queryTags();
 
@@ -235,6 +243,19 @@ public class CreateFragment extends Fragment {
 
                 //datePickerDialog.updateDate(year, month, day);
                 datePickerDialog.show();
+            }
+        });
+
+        binding.btnAddImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    client.selectDriveImage(getActivity());
+                } catch (IOException e) {
+                    Toast.makeText(getApplicationContext(), "Error loading drive content",
+                            Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
             }
         });
     }

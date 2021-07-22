@@ -28,12 +28,16 @@ import com.google.api.client.util.DateTime;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.FileList;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,13 +50,20 @@ public class GoogleApplication {
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
     private static final String APPLICATION_NAME = "FBU_Final_Project";
 
-    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
 
     public GoogleApplication() {}
 
     private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT, Activity activity) throws IOException {
+        List<String> scopes= new ArrayList<>();
+        scopes.add(DriveScopes.DRIVE);
+        scopes.add(DriveScopes.DRIVE_FILE);
+        scopes.add(DriveScopes.DRIVE_APPDATA);
+        scopes.add(DriveScopes.DRIVE_METADATA);
+        scopes.add(DriveScopes.DRIVE_SCRIPTS);
+        scopes.add(CalendarScopes.CALENDAR);
+
         // Load client secrets.
         InputStream in = EventDetailsActivity.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
@@ -68,8 +79,9 @@ public class GoogleApplication {
         if(!dir.isDirectory() || !dir.exists()){
             dir.mkdirs();
         }
+
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
+                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes)
                 .setDataStoreFactory(new FileDataStoreFactory(dir))
                 .setAccessType("offline")
                 .build();
@@ -87,13 +99,11 @@ public class GoogleApplication {
         return ab.authorize("user");
     }
 
-    public void createCalendarEvent(Activity activity, Event event) {
+    public void createCalendarEvent(Activity activity, Event event) throws IOException {
 
         requestWritePermissions(activity);
 
-        final NetHttpTransport HTTP_TRANSPORT;
-        try {
-            HTTP_TRANSPORT = new com.google.api.client.http.javanet.NetHttpTransport();
+        final NetHttpTransport HTTP_TRANSPORT = new com.google.api.client.http.javanet.NetHttpTransport();
             com.google.api.services.calendar.Calendar service =
                     new com.google.api.services.calendar.Calendar.Builder(
                             HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT,
@@ -108,10 +118,30 @@ public class GoogleApplication {
             System.out.printf("Event created: %s\n", calItem.getHtmlLink());
             Toast.makeText(getApplicationContext(), "Event added to calendar!",
                     Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), "Error in adding event to calendar",
-                    Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+    }
+
+    public void selectDriveImage(Activity activity) throws IOException {
+        requestWritePermissions(activity);
+
+        final NetHttpTransport HTTP_TRANSPORT = new com.google.api.client.http.javanet.NetHttpTransport();
+        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY,
+                getCredentials(HTTP_TRANSPORT, activity))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+
+        // Print the names and IDs for up to 10 files.
+        FileList result = service.files().list()
+                .setPageSize(10)
+                .setFields("nextPageToken, files(id, name)")
+                .execute();
+        List<com.google.api.services.drive.model.File> files = result.getFiles();
+        if (files == null || files.isEmpty()) {
+            System.out.println("No files found.");
+        } else {
+            System.out.println("Files:");
+            for (com.google.api.services.drive.model.File file : files) {
+                System.out.printf("%s (%s)\n", file.getName(), file.getId());
+            }
         }
     }
 
