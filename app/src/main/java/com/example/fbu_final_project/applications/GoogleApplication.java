@@ -129,20 +129,20 @@ public class GoogleApplication {
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
-        // Print the names and IDs for up to 10 files.
-        FileList result = service.files().list()
-                .setPageSize(10)
-                .setFields("nextPageToken, files(id, name)")
-                .execute();
-        List<com.google.api.services.drive.model.File> files = result.getFiles();
-        if (files == null || files.isEmpty()) {
-            System.out.println("No files found.");
-        } else {
-            System.out.println("Files:");
-            for (com.google.api.services.drive.model.File file : files) {
-                System.out.printf("%s (%s)\n", file.getName(), file.getId());
+        String pageToken = null;
+        do {
+            FileList result = service.files().list()
+                    .setQ("mimeType='image/jpeg'")
+                    .setSpaces("drive")
+                    .setFields("nextPageToken, files(id, name)")
+                    .setPageToken(pageToken)
+                    .execute();
+            for (com.google.api.services.drive.model.File file : result.getFiles()) {
+                System.out.printf("Found file: %s (%s)\n",
+                        file.getName(), file.getId());
             }
-        }
+            pageToken = result.getNextPageToken();
+        } while (pageToken != null);
     }
 
     private void requestWritePermissions(Activity activity) {
