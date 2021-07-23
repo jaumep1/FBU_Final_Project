@@ -9,11 +9,11 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.fbu_final_project.activities.EventDetailsActivity;
+import com.example.fbu_final_project.activities.ImagePickerActivity;
 import com.example.fbu_final_project.models.Event;
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
@@ -32,13 +32,14 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.FileList;
 
+import org.parceler.Parcels;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.parse.Parse.getApplicationContext;
@@ -49,6 +50,7 @@ public class GoogleApplication {
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
     private static final String APPLICATION_NAME = "FBU_Final_Project";
+    public static final int PICKER_CODE =  20;
 
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
@@ -129,20 +131,29 @@ public class GoogleApplication {
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
+        Intent i = new Intent(activity, ImagePickerActivity.class);
+        ArrayList<String> files = new ArrayList<>();
+
         String pageToken = null;
         do {
             FileList result = service.files().list()
                     .setQ("mimeType='image/jpeg'")
                     .setSpaces("drive")
-                    .setFields("nextPageToken, files(id, name)")
+                    .setFields("nextPageToken, files(id, name, hasThumbnail, thumbnailLink)")
                     .setPageToken(pageToken)
                     .execute();
+
             for (com.google.api.services.drive.model.File file : result.getFiles()) {
-                System.out.printf("Found file: %s (%s)\n",
-                        file.getName(), file.getId());
+                if (file.getHasThumbnail()) {
+                    files.add(file.getThumbnailLink());
+                }
             }
             pageToken = result.getNextPageToken();
         } while (pageToken != null);
+
+
+        i.putExtra("files", Parcels.wrap(files));
+        activity.startActivityForResult(i, PICKER_CODE);
     }
 
     private void requestWritePermissions(Activity activity) {
