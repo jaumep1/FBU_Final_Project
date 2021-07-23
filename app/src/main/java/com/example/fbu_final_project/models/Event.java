@@ -109,5 +109,9 @@ public class Event extends ParseObject {
         put(KEY_IMAGE, filePath);
     }
 
+    public String getPoster() {
+        return getString(KEY_IMAGE);
+    }
+
 
 }

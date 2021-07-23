@@ -258,6 +258,7 @@ public class EventsFeedFragment extends Fragment {
         query.include(Event.KEY_AUTHOR);
         query.include(Event.KEY_START_TIME);
         query.include(Event.KEY_END_TIME);
+        query.include(Event.KEY_IMAGE);
 
         query.setLimit(20);
         query.addDescendingOrder("createdAt");

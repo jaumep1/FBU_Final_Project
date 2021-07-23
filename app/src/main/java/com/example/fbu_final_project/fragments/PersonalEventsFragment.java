@@ -32,6 +32,7 @@ public class PersonalEventsFragment extends EventsFeedFragment {
         query.include(Event.KEY_AUTHOR);
         query.include(Event.KEY_START_TIME);
         query.include(Event.KEY_END_TIME);
+        query.include(Event.KEY_IMAGE);
 
 
         query.whereContainedIn(Event.KEY_OBJECT_ID, eventIds);

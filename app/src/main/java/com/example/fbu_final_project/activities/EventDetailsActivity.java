@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.applications.GoogleApplication;
 import com.example.fbu_final_project.databinding.ActivityEventDetailsBinding;
@@ -125,6 +126,12 @@ public class EventDetailsActivity extends AppCompatActivity {
                }
            }
        });
+
+        String img = event.getPoster();
+
+        if (img != null) {
+            Glide.with(this).load(img).into(binding.ivPoster);
+        }
     }
 
     private boolean isSubscribed() {

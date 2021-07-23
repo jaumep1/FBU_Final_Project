@@ -331,7 +331,6 @@ public class CreateFragment extends Fragment {
         }
         if (selectedImage != null) {
             event.setPoster(selectedImage.getThumbnail());
-
         }
 
         event.saveInBackground(new SaveCallback() {

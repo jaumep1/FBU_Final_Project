@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 ((CreateFragment) activeFragment).selectedImage = file;
             }
 
-            Toast.makeText(getApplicationContext(), "Item updated successfully!",
+            Toast.makeText(getApplicationContext(), "Image selected!",
                     Toast.LENGTH_SHORT).show();
         }
     }

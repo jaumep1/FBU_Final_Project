@@ -49,11 +49,14 @@
 
     <ImageView
         android:id="@+id/ivPoster"
-        android:layout_width="100dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:maxHeight="400dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <Button
