@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -18,17 +19,24 @@ import com.example.fbu_final_project.databinding.ActivityMainBinding;
 import com.example.fbu_final_project.fragments.CreateFragment;
 import com.example.fbu_final_project.fragments.EventsFeedFragment;
 import com.example.fbu_final_project.fragments.PersonalEventsFragment;
+import com.example.fbu_final_project.models.DriveFile;
 import com.google.android.material.navigation.NavigationBarView;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import org.parceler.Parcels;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private static final int SELECT_IMAGE_CODE = 20;
+    private Fragment activeFragment;
+
     final FragmentManager fragmentManager = getSupportFragmentManager();
+
     public static ActivityMainBinding binding;
-    static Context context;
+    public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new CreateFragment();
                         break;
                 }
-                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+                fragmentManager.beginTransaction().replace(binding.flContainer.getId(), fragment).commit();
+                activeFragment = fragment;
                 return true;
             }
         });
@@ -101,5 +110,19 @@ public class MainActivity extends AppCompatActivity {
     public static void finishCreatingEvent() {
         binding.bottomNavigation.setSelectedItemId(R.id.miEventsFeed);
         Toast.makeText(context, "Event created!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == SELECT_IMAGE_CODE) {
+            DriveFile file = Parcels.unwrap(data.getParcelableExtra(DriveFile.class.getSimpleName()));
+            if (activeFragment instanceof CreateFragment) {
+                ((CreateFragment) activeFragment).selectedImage = file;
+            }
+
+            Toast.makeText(getApplicationContext(), "Item updated successfully!",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }

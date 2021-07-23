@@ -1,6 +1,7 @@
 package com.example.fbu_final_project.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 import org.parceler.Parcel;
@@ -20,6 +21,7 @@ public class Event extends ParseObject {
     public static final String KEY_END_TIME = "endTime";
     public static final String KEY_ATTENDEES = "attendees";
     public static final String KEY_TAGS = "tags";
+    public static final String KEY_IMAGE = "eventPoster";
 
     public String getCreator() {
         return getString(KEY_CREATED_BY);
@@ -101,6 +103,10 @@ public class Event extends ParseObject {
 
     public ArrayList<Tag> getTags() {
         return ((ArrayList<Tag>) get(KEY_TAGS));
+    }
+
+    public void setPoster(String filePath) {
+        put(KEY_IMAGE, filePath);
     }
 
 

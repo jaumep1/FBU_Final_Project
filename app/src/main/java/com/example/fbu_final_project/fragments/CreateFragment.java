@@ -27,6 +27,7 @@ import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.adapters.TagsAdapter;
 import com.example.fbu_final_project.applications.GoogleApplication;
 import com.example.fbu_final_project.databinding.FragmentCreateBinding;
+import com.example.fbu_final_project.models.DriveFile;
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.Tag;
 import com.example.fbu_final_project.models.User;
@@ -39,6 +40,7 @@ import com.parse.SaveCallback;
 import android.text.format.DateFormat;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -62,6 +64,8 @@ public class CreateFragment extends Fragment {
     List<Tag> tags;
 
     GoogleApplication client;
+
+    public DriveFile selectedImage;
 
     public CreateFragment() {
         // Required empty public constructor
@@ -98,6 +102,7 @@ public class CreateFragment extends Fragment {
         adapter = new TagsAdapter(getContext(), tags);
         binding.rvTags.setAdapter(adapter);
         setOnClickListeners();
+        selectedImage = null;
     }
 
     @Override
@@ -134,7 +139,11 @@ public class CreateFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (fieldsInputted()) {
-                    createEvent();
+                    try {
+                        createEvent();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Toast.makeText(getContext(), "Please input all text fields!",
                             Toast.LENGTH_SHORT).show();
@@ -283,7 +292,7 @@ public class CreateFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void createEvent() {
+    private void createEvent() throws IOException {
         Event event = new Event();
         String fullname = String.format("%s %s", ((User) ParseUser.getCurrentUser()).getFirstname(),
                 ((User) ParseUser.getCurrentUser()).getLastname());
@@ -318,6 +327,10 @@ public class CreateFragment extends Fragment {
             if (holder.binding.cbTag.isChecked()) {
                 event.addTag(tags.get(i));
             }
+
+        }
+        if (selectedImage != null) {
+            event.setPoster(selectedImage.getThumbnail());
 
         }
 

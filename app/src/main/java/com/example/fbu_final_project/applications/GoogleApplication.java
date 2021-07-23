@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.fbu_final_project.activities.EventDetailsActivity;
 import com.example.fbu_final_project.activities.ImagePickerActivity;
+import com.example.fbu_final_project.models.DriveFile;
 import com.example.fbu_final_project.models.Event;
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.Credential;
@@ -21,6 +22,7 @@ import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInsta
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -34,12 +36,15 @@ import com.google.api.services.drive.model.FileList;
 
 import org.parceler.Parcels;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.parse.Parse.getApplicationContext;
@@ -114,7 +119,6 @@ public class GoogleApplication {
                             .build();
 
             com.google.api.services.calendar.model.Event calItem = createCalItem(event);
-            Log.i("waka", calItem.toPrettyString());
             String calendarId = "primary";
             calItem = service.events().insert(calendarId, calItem).execute();
             System.out.printf("Event created: %s\n", calItem.getHtmlLink());
@@ -132,20 +136,22 @@ public class GoogleApplication {
                 .build();
 
         Intent i = new Intent(activity, ImagePickerActivity.class);
-        ArrayList<String> files = new ArrayList<>();
+        ArrayList<DriveFile> files = new ArrayList<>();
 
         String pageToken = null;
         do {
             FileList result = service.files().list()
                     .setQ("mimeType='image/jpeg'")
                     .setSpaces("drive")
-                    .setFields("nextPageToken, files(id, name, hasThumbnail, thumbnailLink)")
+                    .setFields("nextPageToken, files(id, name, hasThumbnail, thumbnailLink, webContentLink)")
                     .setPageToken(pageToken)
                     .execute();
 
             for (com.google.api.services.drive.model.File file : result.getFiles()) {
                 if (file.getHasThumbnail()) {
-                    files.add(file.getThumbnailLink());
+                    DriveFile driveFile =
+                            new DriveFile(file.getId(), file.getName(), file.getThumbnailLink());
+                    files.add(driveFile);
                 }
             }
             pageToken = result.getNextPageToken();
@@ -159,7 +165,8 @@ public class GoogleApplication {
     private void requestWritePermissions(Activity activity) {
         if (cannotWrite(activity)) {
             ActivityCompat.requestPermissions(activity,
-                    new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                    new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE},
                     1);
         }
 

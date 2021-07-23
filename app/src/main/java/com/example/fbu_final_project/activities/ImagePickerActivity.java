@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.example.fbu_final_project.adapters.ImagePickerAdapter;
 import com.example.fbu_final_project.databinding.ActivityImagePickerBinding;
+import com.example.fbu_final_project.models.DriveFile;
 import com.google.api.services.drive.model.FileList;
 
 import org.parceler.Parcels;
@@ -29,7 +31,7 @@ public class ImagePickerActivity extends AppCompatActivity {
 
         setContentView(binding.getRoot());
 
-        ArrayList<String> files = Parcels.unwrap(getIntent().getParcelableExtra("files"));
+        ArrayList<DriveFile> files = Parcels.unwrap(getIntent().getParcelableExtra("files"));
 
         LinearLayoutManager manager = new GridLayoutManager(this, 3);
         binding.rvImages.setLayoutManager(manager);
