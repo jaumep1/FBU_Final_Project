@@ -1,13 +1,8 @@
 package com.example.fbu_final_project.activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,45 +11,28 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.fbu_final_project.R;
+import com.example.fbu_final_project.adapters.AttendeesAdapter;
 import com.example.fbu_final_project.applications.GoogleApplication;
 import com.example.fbu_final_project.databinding.ActivityEventDetailsBinding;
 import com.example.fbu_final_project.models.Event;
+import com.example.fbu_final_project.models.Tag;
 import com.example.fbu_final_project.models.User;
-import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.DateTime;
-import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.EventDateTime;
+import com.parse.FindCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
-
-import static com.parse.Parse.getApplicationContext;
 
 public class EventDetailsActivity extends AppCompatActivity {
 
@@ -62,7 +40,9 @@ public class EventDetailsActivity extends AppCompatActivity {
 
 
     Event event;
+    List<User> attendees;
 
+    AttendeesAdapter adapter;
     GoogleApplication client;
 
     @Override
@@ -73,9 +53,20 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         setContentView(binding.getRoot());
 
+        event = Parcels.unwrap(getIntent().getParcelableExtra(Event.class.getSimpleName()));
+
         client = new GoogleApplication();
 
-        event = Parcels.unwrap(getIntent().getParcelableExtra(Event.class.getSimpleName()));
+        attendees = new ArrayList<>();
+        adapter = new AttendeesAdapter(getApplicationContext(), attendees);
+        LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext());
+        binding.rvAttendees.setLayoutManager(manager);
+        DividerItemDecoration dividerItemDecoration =
+                new DividerItemDecoration(binding.rvAttendees.getContext(),
+                        manager.getOrientation());
+        binding.rvAttendees.addItemDecoration(dividerItemDecoration);
+        binding.rvAttendees.setAdapter(adapter);
+        loadAttendees();
 
         binding.tvAuthor.setText(String.format("Created by: %s", event.getAuthor()));
         binding.tvDescription.setText(event.getDescription());
@@ -116,6 +107,8 @@ public class EventDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
+
 
         binding.fabAddToCal.setOnClickListener(new View.OnClickListener() {
            @RequiresApi(api = Build.VERSION_CODES.O)
@@ -161,6 +154,40 @@ public class EventDetailsActivity extends AppCompatActivity {
         Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);
         finish();
+    }
+
+    private void loadAttendees() {
+
+        ArrayList<String> attendeeIds = new ArrayList<>();
+
+        for (User attendee : event.getAttendees()) {
+            if (!attendeeIds.contains(attendee.getObjectId())) {
+                attendeeIds.add(attendee.getObjectId());
+            }
+        }
+
+        ParseQuery<User> query = ParseQuery.getQuery(User.class);
+
+        query.include(User.KEY_PICTURE);
+        query.include(User.KEY_FIRSTNAME);
+        query.include(User.KEY_LASTNAME);
+        query.include(User.KEY_OBJECT_ID);
+
+        query.whereContainedIn(User.KEY_OBJECT_ID, attendeeIds);
+
+        query.setLimit(20);
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<User>() {
+            @Override
+            public void done(List<User> attendeeList, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting tags", e);
+                    return;
+                }
+                attendees.addAll(attendeeList);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private boolean isSubscribed() {
