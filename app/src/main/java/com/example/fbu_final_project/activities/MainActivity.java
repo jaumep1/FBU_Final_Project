@@ -2,6 +2,8 @@ package com.example.fbu_final_project.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +18,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.databinding.ActivityMainBinding;
+import com.example.fbu_final_project.extras.BitmapScaler;
+import com.example.fbu_final_project.extras.DeviceDimensionsHelper;
 import com.example.fbu_final_project.fragments.CreateFragment;
 import com.example.fbu_final_project.fragments.EventsFeedFragment;
 import com.example.fbu_final_project.fragments.PersonalEventsFragment;
@@ -32,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final int SELECT_IMAGE_CODE = 20;
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+
     private Fragment activeFragment;
 
     final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -119,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == SELECT_IMAGE_CODE) {
             DriveFile file = Parcels.unwrap(data.getParcelableExtra(DriveFile.class.getSimpleName()));
@@ -129,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "Image selected!",
                     Toast.LENGTH_SHORT).show();
+        } else if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            ((ProfileFragment) activeFragment).handleResult(requestCode, resultCode, data);
         }
     }
 }

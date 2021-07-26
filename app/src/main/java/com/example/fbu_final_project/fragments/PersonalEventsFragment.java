@@ -46,7 +46,6 @@ public class PersonalEventsFragment extends EventsFeedFragment {
                     Log.e(TAG, "Issue with getting events", e);
                     return;
                 }
-                Log.i("waka", String.valueOf(feed.size()));
                 events.addAll(feed);
                 activeEvents.addAll(feed);
                 feedAdapter.notifyDataSetChanged();
