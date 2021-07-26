@@ -19,6 +19,7 @@ import com.example.fbu_final_project.databinding.ActivityMainBinding;
 import com.example.fbu_final_project.fragments.CreateFragment;
 import com.example.fbu_final_project.fragments.EventsFeedFragment;
 import com.example.fbu_final_project.fragments.PersonalEventsFragment;
+import com.example.fbu_final_project.fragments.ProfileFragment;
 import com.example.fbu_final_project.models.DriveFile;
 import com.google.android.material.navigation.NavigationBarView;
 import com.parse.LogOutCallback;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new CreateFragment();
                         break;
                 }
+
                 fragmentManager.beginTransaction().replace(binding.flContainer.getId(), fragment).commit();
                 activeFragment = fragment;
                 return true;
@@ -85,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.logout) {
-            //Compose icon has been clicked
             Log.d(TAG, "Logout clicked");
             ParseUser.logOutInBackground(new LogOutCallback() {
                 @Override
@@ -97,6 +98,11 @@ public class MainActivity extends AppCompatActivity {
                     goLoginActivity();
                 }
             });
+        } else if (item.getItemId() == R.id.profile) {
+            Log.d(TAG, "Profile button clicked");
+            Fragment fragment = new ProfileFragment();
+            activeFragment = fragment;
+            fragmentManager.beginTransaction().replace(binding.flContainer.getId(), fragment).commit();
         }
         return super.onOptionsItemSelected(item);
     }

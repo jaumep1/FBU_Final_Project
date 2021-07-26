@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.fbu_final_project.activities.EventDetailsActivity;
 import com.example.fbu_final_project.databinding.ItemEventBinding;
 import com.example.fbu_final_project.models.Event;
@@ -76,6 +77,7 @@ public class EventsFeedAdapter extends RecyclerView.Adapter<EventsFeedAdapter.Vi
             binding.tvAuthor.setText(String.format("Created by: %s", event.getAuthor()));
             binding.tvDescription.setText(event.getDescription());
             binding.tvTime.setText(String.format("%s - %s", event.getStartTime(), event.getEndTime()));
+            Glide.with(context).load(event.getPoster()).into(binding.ivPoster);
         }
     }
 }

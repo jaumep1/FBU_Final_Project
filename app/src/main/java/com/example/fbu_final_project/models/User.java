@@ -1,6 +1,7 @@
 package com.example.fbu_final_project.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class User extends ParseUser {
     private static final String KEY_FIRSTNAME = "firstname";
     private static final String KEY_LASTNAME = "lastname";
     private static final String KEY_SUBSCRIPTIONS = "subscriptions";
+    private static final String KEY_PICTURE = "profileImage";
 
     public void setUsername(String username) {
         put(KEY_USERNAME, username);
@@ -53,6 +55,10 @@ public class User extends ParseUser {
     }
     public void createSubs() {
         put(KEY_SUBSCRIPTIONS, new ArrayList<Event>());
+    }
+
+    public ParseFile getProfilePic() {
+        return getParseFile(KEY_PICTURE);
     }
 
 }
