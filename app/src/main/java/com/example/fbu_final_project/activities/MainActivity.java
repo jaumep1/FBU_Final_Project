@@ -2,8 +2,6 @@ package com.example.fbu_final_project.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,8 +16,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.databinding.ActivityMainBinding;
-import com.example.fbu_final_project.extras.BitmapScaler;
-import com.example.fbu_final_project.extras.DeviceDimensionsHelper;
 import com.example.fbu_final_project.fragments.CreateFragment;
 import com.example.fbu_final_project.fragments.EventsFeedFragment;
 import com.example.fbu_final_project.fragments.PersonalEventsFragment;

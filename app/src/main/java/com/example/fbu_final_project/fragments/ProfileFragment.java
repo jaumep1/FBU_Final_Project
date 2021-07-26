@@ -7,18 +7,24 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.FileProvider;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.adapters.EventsFeedAdapter;
 import com.example.fbu_final_project.databinding.FragmentProfileBinding;
 import com.example.fbu_final_project.models.Event;
@@ -45,6 +51,7 @@ public class ProfileFragment extends Fragment {
     FragmentProfileBinding binding;
     EventsFeedAdapter adapter;
     List<Event> events;
+    List<Event> activeEvents;
     User user;
 
     private File photoFile;
@@ -70,7 +77,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        setHasOptionsMenu(true);
         setUser();
 
         binding.tvName.setText(String.format("%s %s", user.getFirstname(), user.getLastname()));
@@ -79,7 +86,8 @@ public class ProfileFragment extends Fragment {
                 .into(binding.ivProfilePic);
 
         events = new ArrayList<>();
-        adapter = new EventsFeedAdapter(getContext(), events);
+        activeEvents = new ArrayList<>();
+        adapter = new EventsFeedAdapter(getContext(), activeEvents);
         binding.rvEvents.setAdapter(adapter);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         binding.rvEvents.setLayoutManager(manager);
@@ -96,6 +104,55 @@ public class ProfileFragment extends Fragment {
                 return true;
             }
         });
+    }
+
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem searchItem = menu.findItem(R.id.miSearch);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterEvents(query);
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                activeEvents.clear();
+                activeEvents.addAll(events);
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+    }
+
+    private void filterEvents(String search) {
+
+        activeEvents.clear();
+        for (Event event : events) {
+            if (event.getName().contains(search)) {
+                activeEvents.add(event);
+            } else if (event.getDescription().contains(search)) {
+                activeEvents.add(event);
+            } else if (event.getAuthor().contains(search)) {
+                activeEvents.add(event);
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 
     protected void setUser() {
@@ -178,6 +235,9 @@ public class ProfileFragment extends Fragment {
                     Log.e(TAG, "Issue with getting events", e);
                     return;
                 }
+                activeEvents.clear();
+                events.clear();
+                activeEvents.addAll(feed);
                 events.addAll(feed);
                 adapter.notifyDataSetChanged();
             }
