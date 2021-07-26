@@ -27,8 +27,11 @@ import com.example.fbu_final_project.databinding.FragmentEventsFeedBinding;
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.Tag;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +67,13 @@ public class EventsFeedFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ParseUser.getCurrentUser().fetchInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+
+            }
+        });
 
         setHasOptionsMenu(true);
 
