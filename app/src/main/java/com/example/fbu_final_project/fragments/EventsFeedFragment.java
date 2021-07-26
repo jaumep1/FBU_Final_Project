@@ -116,12 +116,9 @@ public class EventsFeedFragment extends Fragment {
             }
         };
 
+        //Wait to set listeners until recylcler view is bound
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(runnable, 1000); // run in 1 second
-
-
-
-
 
         // Setup refresh listener which triggers new data loading
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -214,7 +211,6 @@ public class EventsFeedFragment extends Fragment {
             }
         }
         feedAdapter.notifyDataSetChanged();
-
     }
 
 
@@ -255,9 +251,7 @@ public class EventsFeedFragment extends Fragment {
                 }
             }
         }
-
         feedAdapter.notifyDataSetChanged();
-
     }
 
     protected void queryEvents(){

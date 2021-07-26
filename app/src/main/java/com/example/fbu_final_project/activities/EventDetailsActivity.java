@@ -20,7 +20,6 @@ import com.example.fbu_final_project.adapters.AttendeesAdapter;
 import com.example.fbu_final_project.applications.GoogleApplication;
 import com.example.fbu_final_project.databinding.ActivityEventDetailsBinding;
 import com.example.fbu_final_project.models.Event;
-import com.example.fbu_final_project.models.Tag;
 import com.example.fbu_final_project.models.User;
 import com.parse.FindCallback;
 import com.parse.LogOutCallback;
@@ -37,6 +36,7 @@ import java.util.List;
 public class EventDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "EventDetailsActivity";
+    ActivityEventDetailsBinding binding;
 
 
     Event event;
@@ -49,7 +49,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivityEventDetailsBinding binding = ActivityEventDetailsBinding.inflate(getLayoutInflater());
+        binding = ActivityEventDetailsBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
 
@@ -79,10 +79,19 @@ public class EventDetailsActivity extends AppCompatActivity {
             binding.btnSubscribe.setText("Subscribe");
         }
 
+        String img = event.getPoster();
+
+        if (img != null) {
+            Glide.with(this).load(img).into(binding.ivPoster);
+        }
+
+        setOnClickListeners();
+    }
+
+    private void setOnClickListeners() {
         binding.btnSubscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 User user = (User) ParseUser.getCurrentUser();
 
                 if (isSubscribed()) {
@@ -108,27 +117,19 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
         });
 
-
-
         binding.fabAddToCal.setOnClickListener(new View.OnClickListener() {
-           @RequiresApi(api = Build.VERSION_CODES.O)
-           @Override
-           public void onClick(View v) {
-               try {
-                   client.createCalendarEvent(EventDetailsActivity.this, event);
-               } catch (IOException e) {
-                   Toast.makeText(getApplicationContext(), "Error adding event to calendar",
-                           Toast.LENGTH_SHORT).show();
-                   e.printStackTrace();
-               }
-           }
-       });
-
-        String img = event.getPoster();
-
-        if (img != null) {
-            Glide.with(this).load(img).into(binding.ivPoster);
-        }
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                try {
+                    client.createCalendarEvent(EventDetailsActivity.this, event);
+                } catch (IOException e) {
+                    Toast.makeText(getApplicationContext(), "Error adding event to calendar",
+                            Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -157,7 +158,6 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     private void loadAttendees() {
-
         ArrayList<String> attendeeIds = new ArrayList<>();
 
         for (User attendee : event.getAttendees()) {
@@ -191,7 +191,6 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     private boolean isSubscribed() {
-
         User user = ((User) ParseUser.getCurrentUser());
 
         ArrayList<Event> subs = user.getSubscriptions();

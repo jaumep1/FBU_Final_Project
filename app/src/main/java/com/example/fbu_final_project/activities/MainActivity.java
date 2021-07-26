@@ -46,12 +46,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        context = this;
 
         setContentView(binding.getRoot());
 
-        context = this;
-
-        //setup toolbar
         setSupportActionBar(binding.toolbar);
 
         binding.bottomNavigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

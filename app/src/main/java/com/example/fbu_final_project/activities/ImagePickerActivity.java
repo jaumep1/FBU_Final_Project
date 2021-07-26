@@ -1,22 +1,18 @@
 package com.example.fbu_final_project.activities;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-
 import com.example.fbu_final_project.adapters.ImagePickerAdapter;
 import com.example.fbu_final_project.databinding.ActivityImagePickerBinding;
 import com.example.fbu_final_project.models.DriveFile;
-import com.google.api.services.drive.model.FileList;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ImagePickerActivity extends AppCompatActivity {
 

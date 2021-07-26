@@ -1,12 +1,11 @@
 package com.example.fbu_final_project.fragments;
 
 import android.util.Log;
+
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.User;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 

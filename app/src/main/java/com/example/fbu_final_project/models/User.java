@@ -1,12 +1,9 @@
 package com.example.fbu_final_project.models;
 
-import android.util.Log;
-
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
-import java.io.File;
 import java.util.ArrayList;
 
 @ParseClassName("_User")

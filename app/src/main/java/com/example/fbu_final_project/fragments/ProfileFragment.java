@@ -194,6 +194,7 @@ public class ProfileFragment extends Fragment {
         // Return the file target for the photo based on filename
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
+
     public void handleResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {

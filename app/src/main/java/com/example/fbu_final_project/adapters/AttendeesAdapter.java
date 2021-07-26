@@ -1,7 +1,6 @@
 package com.example.fbu_final_project.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 

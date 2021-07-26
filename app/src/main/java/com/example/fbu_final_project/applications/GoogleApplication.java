@@ -22,7 +22,6 @@ import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInsta
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.http.FileContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -36,15 +35,12 @@ import com.google.api.services.drive.model.FileList;
 
 import org.parceler.Parcels;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.parse.Parse.getApplicationContext;
@@ -62,6 +58,7 @@ public class GoogleApplication {
 
     public GoogleApplication() {}
 
+    //Establish credentials for Google API client
     private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT, Activity activity) throws IOException {
         List<String> scopes= new ArrayList<>();
         scopes.add(DriveScopes.DRIVE);
@@ -71,7 +68,7 @@ public class GoogleApplication {
         scopes.add(DriveScopes.DRIVE_SCRIPTS);
         scopes.add(CalendarScopes.CALENDAR);
 
-        // Load client secrets.
+        // Load client secrets
         InputStream in = EventDetailsActivity.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
@@ -87,6 +84,7 @@ public class GoogleApplication {
             dir.mkdirs();
         }
 
+        //Create authorization flow
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes)
                 .setDataStoreFactory(new FileDataStoreFactory(dir))
@@ -106,6 +104,7 @@ public class GoogleApplication {
         return ab.authorize("user");
     }
 
+    //Method for creating Google Calendar items
     public void createCalendarEvent(Activity activity, Event event) throws IOException {
 
         requestWritePermissions(activity);
@@ -126,6 +125,7 @@ public class GoogleApplication {
                     Toast.LENGTH_SHORT).show();
     }
 
+    //Method for getting images from Google Drive
     public void selectDriveImage(Activity activity) throws IOException {
         requestWritePermissions(activity);
 
@@ -162,6 +162,7 @@ public class GoogleApplication {
         activity.startActivityForResult(i, PICKER_CODE);
     }
 
+    //Helper method to make sure credentials and tokens can be stored on device
     private void requestWritePermissions(Activity activity) {
         if (cannotWrite(activity)) {
             ActivityCompat.requestPermissions(activity,
