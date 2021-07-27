@@ -138,10 +138,9 @@ public class MainActivity extends AppCompatActivity {
             ((PersonalProfileFragment) activeFragment).handleResult(requestCode, resultCode, data);
         } else if (requestCode == EventsFeedAdapter.LOAD_USER_PROFILE_CODE && resultCode == RESULT_OK) {
             User user = Parcels.unwrap(data.getParcelableExtra(User.class.getSimpleName()));
+            boolean attendeeStatus = data.getBooleanExtra("attendeeStatus", false);
 
-            Log.i("waka1", user.toString());
-
-            Fragment fragment = new UserProfileFragment(user);
+            Fragment fragment = new UserProfileFragment(user, attendeeStatus);
             activeFragment = fragment;
             fragmentManager.beginTransaction().replace(binding.flContainer.getId(), fragment).commit();
         }

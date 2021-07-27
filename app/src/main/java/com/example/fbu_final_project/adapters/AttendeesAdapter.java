@@ -85,6 +85,7 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.View
             if (position != RecyclerView.NO_POSITION) {
                 Intent i = new Intent(context, MainActivity.class);
                 i.putExtra(User.class.getSimpleName(), Parcels.wrap(attendees.get(getAdapterPosition())));
+                i.putExtra("attendeeStatus", true);
                 activity.setResult(RESULT_OK, i);
                 activity.finish();
             }

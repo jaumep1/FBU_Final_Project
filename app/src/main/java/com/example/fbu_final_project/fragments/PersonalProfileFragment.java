@@ -53,13 +53,14 @@ public class PersonalProfileFragment extends Fragment {
     List<Event> events;
     List<Event> activeEvents;
     User user;
+    boolean isAttendee;
 
     private File photoFile;
     public String photoFileName = "photo.jpg";
 
 
     public PersonalProfileFragment() {
-        // Required empty public constructor
+        isAttendee = false;
     }
 
     @Override
@@ -215,8 +216,6 @@ public class PersonalProfileFragment extends Fragment {
     }
 
     private void queryEvents() {
-        events.clear();
-
         ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
 
         query.include(Event.KEY_EVENT_NAME);
@@ -226,7 +225,18 @@ public class PersonalProfileFragment extends Fragment {
         query.include(Event.KEY_END_TIME);
         query.include(Event.KEY_IMAGE);
 
-        query.whereEqualTo(Event.KEY_AUTHOR, String.format("%s %s", user.getFirstname(), user.getLastname()));
+        if (isAttendee) {
+            ArrayList<String> eventIds = new ArrayList<>();
+
+            for (Event sub : user.getSubscriptions()) {
+                eventIds.add(sub.getObjectId());
+            }
+
+            query.whereContainedIn(Event.KEY_OBJECT_ID, eventIds);
+
+        } else {
+            query.whereEqualTo(Event.KEY_AUTHOR, String.format("%s %s", user.getFirstname(), user.getLastname()));
+        }
 
         query.setLimit(20);
         query.addDescendingOrder("createdAt");

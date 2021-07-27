@@ -157,6 +157,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                             return;
                         }
                         i.putExtra(User.class.getSimpleName(), Parcels.wrap(attendeeList.get(0)));
+                        i.putExtra("attendeeStatus", false);
                         setResult(RESULT_OK, i);
                         finish();
                     }
