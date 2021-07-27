@@ -132,6 +132,37 @@ public class EventDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        binding.tvAuthor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+
+                ParseQuery<User> query = ParseQuery.getQuery(User.class);
+
+                query.include(User.KEY_PICTURE);
+                query.include(User.KEY_FIRSTNAME);
+                query.include(User.KEY_LASTNAME);
+                query.include(User.KEY_OBJECT_ID);
+
+                query.whereEqualTo(User.KEY_OBJECT_ID, event.getCreator());
+
+                query.setLimit(20);
+                query.addDescendingOrder("createdAt");
+                query.findInBackground(new FindCallback<User>() {
+                    @Override
+                    public void done(List<User> attendeeList, ParseException e) {
+                        if (e != null) {
+                            Log.e(TAG, "Issue with getting tags", e);
+                            return;
+                        }
+                        i.putExtra(User.class.getSimpleName(), Parcels.wrap(attendeeList.get(0)));
+                        setResult(RESULT_OK, i);
+                        finish();
+                    }
+                });
+            }
+        });
     }
 
     @Override
