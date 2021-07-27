@@ -42,9 +42,9 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ProfileFragment extends Fragment {
+public class PersonalProfileFragment extends Fragment {
 
-    private static final String TAG = "ProfileFragment";
+    private static final String TAG = "PersonalProfileFragment";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
 
 
@@ -58,7 +58,7 @@ public class ProfileFragment extends Fragment {
     public String photoFileName = "photo.jpg";
 
 
-    public ProfileFragment() {
+    public PersonalProfileFragment() {
         // Required empty public constructor
     }
 
@@ -96,14 +96,6 @@ public class ProfileFragment extends Fragment {
                         manager.getOrientation());
         binding.rvEvents.addItemDecoration(dividerItemDecoration);
         queryEvents();
-
-        binding.ivProfilePic.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                launchCamera();
-                return true;
-            }
-        });
     }
 
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -157,6 +149,15 @@ public class ProfileFragment extends Fragment {
 
     protected void setUser() {
         user = (User) ParseUser.getCurrentUser();
+        binding.ivProfilePic.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                launchCamera();
+                return true;
+            }
+        });
+
+        binding.tvHeader.setText("Events You Created:");
     }
 
     public void launchCamera() {

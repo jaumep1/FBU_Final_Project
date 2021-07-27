@@ -3,6 +3,7 @@ package com.example.fbu_final_project.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,12 +16,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.fbu_final_project.R;
+import com.example.fbu_final_project.adapters.EventsFeedAdapter;
 import com.example.fbu_final_project.databinding.ActivityMainBinding;
 import com.example.fbu_final_project.fragments.CreateFragment;
 import com.example.fbu_final_project.fragments.EventsFeedFragment;
 import com.example.fbu_final_project.fragments.PersonalEventsFragment;
-import com.example.fbu_final_project.fragments.ProfileFragment;
+import com.example.fbu_final_project.fragments.PersonalProfileFragment;
+import com.example.fbu_final_project.fragments.UserProfileFragment;
 import com.example.fbu_final_project.models.DriveFile;
+import com.example.fbu_final_project.models.Event;
+import com.example.fbu_final_project.models.User;
 import com.google.android.material.navigation.NavigationBarView;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
@@ -100,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             });
         } else if (item.getItemId() == R.id.profile) {
             Log.d(TAG, "Profile button clicked");
-            Fragment fragment = new ProfileFragment();
+            Fragment fragment = new PersonalProfileFragment();
             activeFragment = fragment;
             fragmentManager.beginTransaction().replace(binding.flContainer.getId(), fragment).commit();
         }
@@ -130,7 +135,15 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Image selected!",
                     Toast.LENGTH_SHORT).show();
         } else if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            ((ProfileFragment) activeFragment).handleResult(requestCode, resultCode, data);
+            ((PersonalProfileFragment) activeFragment).handleResult(requestCode, resultCode, data);
+        } else if (requestCode == EventsFeedAdapter.LOAD_USER_PROFILE_CODE && resultCode == RESULT_OK) {
+            User user = Parcels.unwrap(data.getParcelableExtra(User.class.getSimpleName()));
+
+            Log.i("waka1", user.toString());
+
+            Fragment fragment = new UserProfileFragment(user);
+            activeFragment = fragment;
+            fragmentManager.beginTransaction().replace(binding.flContainer.getId(), fragment).commit();
         }
     }
 }

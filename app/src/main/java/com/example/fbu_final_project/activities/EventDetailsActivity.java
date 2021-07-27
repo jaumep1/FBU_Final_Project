@@ -1,11 +1,13 @@
 package com.example.fbu_final_project.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -58,7 +60,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         client = new GoogleApplication();
 
         attendees = new ArrayList<>();
-        adapter = new AttendeesAdapter(getApplicationContext(), attendees);
+        adapter = new AttendeesAdapter(getApplicationContext(), attendees, this);
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext());
         binding.rvAttendees.setLayoutManager(manager);
         DividerItemDecoration dividerItemDecoration =

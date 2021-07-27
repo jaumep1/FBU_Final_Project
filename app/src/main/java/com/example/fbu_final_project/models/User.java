@@ -4,11 +4,15 @@ import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 
+@Parcel(analyze = User.class)
 @ParseClassName("_User")
 public class User extends ParseUser {
 
+    public static final String KEY_ID = "objectId";
     public static final String KEY_USERNAME = "username";
     private static final String KEY_PASSWORD = "password";
     public static final String KEY_FIRSTNAME = "firstname";

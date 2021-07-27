@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ProfileFragment">
+    tools:context=".fragments.PersonalProfileFragment">
 
     <ImageView
         android:id="@+id/ivProfilePic"
@@ -23,7 +23,8 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/ivProfilePic"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:text="Firstname Lastname" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvEvents"
@@ -40,5 +41,5 @@
         android:layout_below="@+id/ivProfilePic"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
-        android:text="@string/events_you_created" />
+        tools:text="Events You Created" />
 </RelativeLayout>

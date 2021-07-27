@@ -30,6 +30,5 @@
     <string name="unsubscribe">Unsubscribe</string>
     <string name="subscribe">Subscribe</string>
     <string name="select_image">Select Image:</string>
-    <string name="events_you_created">Events You Created:</string>
     <string name="view_attendees">View Attendees</string>
 </resources>

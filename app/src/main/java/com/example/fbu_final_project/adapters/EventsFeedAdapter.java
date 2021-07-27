@@ -1,5 +1,6 @@
 package com.example.fbu_final_project.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import java.util.List;
 public class EventsFeedAdapter extends RecyclerView.Adapter<EventsFeedAdapter.ViewHolder> {
     Context context;
     List<Event> events;
+    public final static int LOAD_USER_PROFILE_CODE = 12;
 
     public EventsFeedAdapter (Context context, List<Event> events) {
         this.context = context;
@@ -68,7 +70,7 @@ public class EventsFeedAdapter extends RecyclerView.Adapter<EventsFeedAdapter.Vi
             if (position != RecyclerView.NO_POSITION) {
                 Intent i = new Intent(context, EventDetailsActivity.class);
                 i.putExtra(Event.class.getSimpleName(), Parcels.wrap(events.get(position)));
-                context.startActivity(i);
+                ((Activity) context).startActivityForResult(i, LOAD_USER_PROFILE_CODE);
             }
         }
 
