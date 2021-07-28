@@ -15,7 +15,8 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FBU_Final_Project">
+        android:theme="@style/Theme.FBU_Final_Project"
+        android:configChanges="keyboardHidden|orientation|screenSize">
         <activity android:name=".activities.ImagePickerActivity"></activity>
         <activity android:name=".activities.SignupActivity" />
         <activity android:name=".activities.EventDetailsActivity" />

@@ -1,5 +1,7 @@
 package com.example.fbu_final_project.fragments;
 
+import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,9 +15,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -64,6 +66,7 @@ public class EventsFeedFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -85,7 +88,7 @@ public class EventsFeedFragment extends Fragment {
                         feedManager.getOrientation());
         binding.rvEvents.addItemDecoration(dividerItemDecoration);
 
-        tagsManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        tagsManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         tagsManager.canScrollHorizontally();
         binding.rvTagsFilter.setLayoutManager(tagsManager);
 

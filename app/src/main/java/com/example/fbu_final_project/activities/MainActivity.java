@@ -1,7 +1,10 @@
 package com.example.fbu_final_project.activities;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -10,20 +13,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.fbu_final_project.R;
-import com.example.fbu_final_project.adapters.EventsFeedAdapter;
 import com.example.fbu_final_project.databinding.ActivityMainBinding;
 import com.example.fbu_final_project.fragments.CreateFragment;
 import com.example.fbu_final_project.fragments.EventsFeedFragment;
 import com.example.fbu_final_project.fragments.PersonalEventsFragment;
 import com.example.fbu_final_project.fragments.PersonalProfileFragment;
-import com.example.fbu_final_project.fragments.UserProfileFragment;
 import com.example.fbu_final_project.models.DriveFile;
-import com.example.fbu_final_project.models.User;
 import com.google.android.material.navigation.NavigationBarView;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
@@ -38,9 +37,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int SELECT_IMAGE_CODE = 20;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
 
-    private Fragment activeFragment;
+    private android.app.Fragment activeFragment;
 
-    final FragmentManager fragmentManager = getSupportFragmentManager();
+    final FragmentManager fragmentManager = getFragmentManager();
 
     public static ActivityMainBinding binding;
     public static Context context;
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             });
         } else if (item.getItemId() == R.id.profile) {
             Log.d(TAG, "Profile button clicked");
-            Fragment fragment = new PersonalProfileFragment();
+            android.app.Fragment fragment = new PersonalProfileFragment();
             activeFragment = fragment;
             fragmentManager.beginTransaction().replace(binding.flContainer.getId(), fragment).commit();
         }
@@ -123,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(context, "Event created!", Toast.LENGTH_SHORT).show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

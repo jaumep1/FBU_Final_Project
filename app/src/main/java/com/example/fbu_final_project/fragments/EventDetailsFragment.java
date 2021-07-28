@@ -1,5 +1,6 @@
 package com.example.fbu_final_project.fragments;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -21,10 +21,8 @@ import com.bumptech.glide.Glide;
 import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.activities.EventDetailsActivity;
 import com.example.fbu_final_project.activities.LoginActivity;
-import com.example.fbu_final_project.activities.MainActivity;
 import com.example.fbu_final_project.adapters.AttendeesAdapter;
 import com.example.fbu_final_project.applications.GoogleApplication;
-import com.example.fbu_final_project.databinding.FragmentCreateBinding;
 import com.example.fbu_final_project.databinding.FragmentEventDetailsBinding;
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.User;
@@ -33,9 +31,9 @@ import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.r0adkll.slidr.model.SlidrInterface;
 
 import org.jetbrains.annotations.NotNull;
-import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,12 +51,14 @@ public class EventDetailsFragment extends Fragment {
 
     FragmentEventDetailsBinding binding;
 
-    public EventDetailsFragment(Event event) {
+    public EventDetailsFragment(){}
+
+    public void setEvent(Event event) {
         this.event = event;
     }
 
     @Override
-    public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
@@ -70,6 +70,7 @@ public class EventDetailsFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -108,6 +109,7 @@ public class EventDetailsFragment extends Fragment {
 
     private void setOnClickListeners() {
         binding.btnSubscribe.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
                 User user = (User) ParseUser.getCurrentUser();
@@ -170,7 +172,7 @@ public class EventDetailsFragment extends Fragment {
                             Log.e(TAG, "Issue with getting tags", e);
                             return;
                         }
-                        Fragment fragment = new UserProfileFragment(attendeeList.get(0),
+                        android.app.Fragment fragment = new UserProfileFragment(attendeeList.get(0),
                                 false);
                         ((EventDetailsActivity) getActivity()).loadProfile(fragment);
                     }

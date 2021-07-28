@@ -1,7 +1,9 @@
 package com.example.fbu_final_project.fragments;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -16,10 +18,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.FileProvider;
 import androidx.core.view.MenuItemCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -79,6 +81,7 @@ public class PersonalProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -155,6 +158,7 @@ public class PersonalProfileFragment extends Fragment {
     protected void setUser() {
         user = (User) ParseUser.getCurrentUser();
         binding.ivProfilePic.setOnLongClickListener(new View.OnLongClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public boolean onLongClick(View v) {
                 launchCamera();
@@ -165,6 +169,7 @@ public class PersonalProfileFragment extends Fragment {
         binding.tvHeader.setText("Events You Created:");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void launchCamera() {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -186,6 +191,7 @@ public class PersonalProfileFragment extends Fragment {
     }
 
     // Returns the File for a photo stored on disk given the fileName
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
@@ -201,11 +207,13 @@ public class PersonalProfileFragment extends Fragment {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void handleResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 user.setProfilePic(new ParseFile(photoFile));
                 user.saveInBackground(new SaveCallback() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void done(ParseException e) {
                         Glide.with(getContext()).load(photoFile)

@@ -2,33 +2,20 @@ package com.example.fbu_final_project.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.fbu_final_project.activities.EventDetailsActivity;
-import com.example.fbu_final_project.activities.LoginActivity;
-import com.example.fbu_final_project.activities.MainActivity;
 import com.example.fbu_final_project.databinding.ItemAttendeeBinding;
 import com.example.fbu_final_project.fragments.UserProfileFragment;
-import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.User;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-
-import org.parceler.Parcels;
 
 import java.util.List;
-
-import static android.app.Activity.RESULT_OK;
 
 public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.ViewHolder> {
 
@@ -84,7 +71,7 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.View
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
                 ((EventDetailsActivity) activity)
-                        .loadProfile(new UserProfileFragment(attendees.get(position), false));
+                        .loadProfile(new UserProfileFragment(attendees.get(position), true));
             }
         }
     }
