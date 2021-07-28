@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -14,6 +15,8 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+import com.r0adkll.slidr.Slidr;
+import com.royrodriguez.transitionbutton.TransitionButton;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -23,6 +26,8 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Slidr.attach(this);
+
         ActivitySignupBinding binding = ActivitySignupBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
@@ -30,12 +35,36 @@ public class SignupActivity extends AppCompatActivity {
         binding.btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onClick login button");
+                // Start the loading animation when the user tap the button
+                binding.btnSignup.startAnimation();
+
+                // Do your networking task or background work here.
+                Log.i(TAG, "onClick signup button");
                 String username = binding.etUsername.getText().toString();
                 String password = binding.etPassword.getText().toString();
                 String firstname = binding.etFirstname.getText().toString();
                 String lastname = binding.etLastname.getText().toString();
                 signUp(username, password, firstname, lastname);
+
+                final Handler handler = new Handler();
+                loginUser(username, password);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Choose a stop animation if your call was succesful or not
+                        boolean isSuccessful = (ParseUser.getCurrentUser() != null);
+                        if (isSuccessful) {
+                            binding.btnSignup.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND, new TransitionButton.OnAnimationStopEndListener() {
+                                @Override
+                                public void onAnimationStopEnd() {
+                                    goMainActivity();
+                                }
+                            });
+                        } else {
+                            binding.btnSignup.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
+                        }
+                    }
+                }, 2000);
             }
         });
     }
@@ -55,6 +84,8 @@ public class SignupActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 if (e == null) {
                     // Hooray! Let them use the app now.
+                    Toast.makeText(SignupActivity.this, "Success!",
+                            Toast.LENGTH_SHORT).show();
                     loginUser(username, password);
                 } else {
                     Log.e(TAG, "Sign up failed", e);
@@ -70,15 +101,8 @@ public class SignupActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Issue on login", e);
-                    Toast.makeText(SignupActivity.this, "Invalid Login!",
-                            Toast.LENGTH_SHORT).show();
-
                     return;
                 }
-
-                goMainActivity();
-                Toast.makeText(SignupActivity.this, "Success!",
-                        Toast.LENGTH_SHORT).show();
             }
         });
     }

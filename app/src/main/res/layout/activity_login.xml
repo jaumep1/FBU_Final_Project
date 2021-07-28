@@ -31,7 +31,9 @@
         tools:layout_editor_absoluteX="77dp"
         tools:layout_editor_absoluteY="121dp" />
 
-    <Button
+
+
+    <com.royrodriguez.transitionbutton.TransitionButton
         android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,7 +44,7 @@
         tools:layout_editor_absoluteX="144dp"
         tools:layout_editor_absoluteY="217dp" />
 
-    <Button
+    <com.royrodriguez.transitionbutton.TransitionButton
         android:id="@+id/btnSignup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

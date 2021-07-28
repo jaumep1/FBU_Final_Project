@@ -59,4 +59,5 @@ dependencies {
     implementation 'com.r0adkll:slidableactivity:2.1.0'
     implementation 'com.desarrollodroide:fragmenttransactionextended:1'
     implementation 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
+    implementation 'com.royrodriguez:transitionbutton:0.2.0'
 }
