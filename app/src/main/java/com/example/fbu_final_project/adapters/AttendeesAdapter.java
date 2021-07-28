@@ -17,6 +17,7 @@ import com.example.fbu_final_project.activities.EventDetailsActivity;
 import com.example.fbu_final_project.activities.LoginActivity;
 import com.example.fbu_final_project.activities.MainActivity;
 import com.example.fbu_final_project.databinding.ItemAttendeeBinding;
+import com.example.fbu_final_project.fragments.UserProfileFragment;
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.User;
 import com.parse.FindCallback;
@@ -81,13 +82,9 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.View
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-
             if (position != RecyclerView.NO_POSITION) {
-                Intent i = new Intent(context, MainActivity.class);
-                i.putExtra(User.class.getSimpleName(), Parcels.wrap(attendees.get(getAdapterPosition())));
-                i.putExtra("attendeeStatus", true);
-                activity.setResult(RESULT_OK, i);
-                activity.finish();
+                ((EventDetailsActivity) activity)
+                        .loadProfile(new UserProfileFragment(attendees.get(position), false));
             }
         }
     }

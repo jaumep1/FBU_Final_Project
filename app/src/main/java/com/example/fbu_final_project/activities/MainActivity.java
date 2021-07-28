@@ -3,7 +3,6 @@ package com.example.fbu_final_project.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +23,6 @@ import com.example.fbu_final_project.fragments.PersonalEventsFragment;
 import com.example.fbu_final_project.fragments.PersonalProfileFragment;
 import com.example.fbu_final_project.fragments.UserProfileFragment;
 import com.example.fbu_final_project.models.DriveFile;
-import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.User;
 import com.google.android.material.navigation.NavigationBarView;
 import com.parse.LogOutCallback;
@@ -138,13 +136,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         } else if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             ((PersonalProfileFragment) activeFragment).handleResult(requestCode, resultCode, data);
-        } else if (requestCode == EventsFeedAdapter.LOAD_USER_PROFILE_CODE && resultCode == RESULT_OK) {
-            User user = Parcels.unwrap(data.getParcelableExtra(User.class.getSimpleName()));
-            boolean attendeeStatus = data.getBooleanExtra("attendeeStatus", false);
-
-            Fragment fragment = new UserProfileFragment(user, attendeeStatus);
-            activeFragment = fragment;
-            fragmentManager.beginTransaction().replace(binding.flContainer.getId(), fragment).commit();
         }
     }
 }
