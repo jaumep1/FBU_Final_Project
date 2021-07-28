@@ -28,6 +28,7 @@ import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.r0adkll.slidr.Slidr;
 
 import org.parceler.Parcels;
 
@@ -50,6 +51,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Slidr.attach(this);
 
         binding = ActivityEventDetailsBinding.inflate(getLayoutInflater());
 

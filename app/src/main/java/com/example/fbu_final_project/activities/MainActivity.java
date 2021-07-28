@@ -30,6 +30,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.r0adkll.slidr.Slidr;
 
 import org.parceler.Parcels;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Slidr.attach(this);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         context = this;
