@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,6 +37,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.royrodriguez.transitionbutton.TransitionButton;
 
 import android.text.format.DateFormat;
 import android.widget.Toast;
@@ -139,16 +141,41 @@ public class CreateFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                if (fieldsInputted()) {
-                    try {
-                        createEvent();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Please input all text fields!",
-                            Toast.LENGTH_SHORT).show();
+                // Start the loading animation when the user tap the button
+                binding.btnCreate.startAnimation();
+                boolean isSuccessful;
+                try {
+                    createEvent();
+                    isSuccessful = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    isSuccessful = false;
                 }
+                final Handler handler = new Handler();
+                boolean finalIsSuccessful = isSuccessful;
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (finalIsSuccessful && fieldsInputted()) {
+                            binding.btnCreate.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND, new TransitionButton.OnAnimationStopEndListener() {
+                                @Override
+                                public void onAnimationStopEnd() {
+                                    ((MainActivity) getActivity()).binding.bottomNavigation.setSelectedItemId(R.id.miEventsFeed);
+                                    Toast.makeText(getContext(), "Event created!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            binding.btnCreate.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
+                            if (fieldsInputted()) {
+                                Toast.makeText(getContext(), "Error creating event!",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Please input all text fields!",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }, 2000);
             }
         });
 
@@ -349,8 +376,6 @@ public class CreateFragment extends Fragment {
                 binding.tvStartDate.setText("START DATE");
                 binding.tvEndTime.setText("END TIME");
                 binding.tvEndDate.setText("END DATE");
-
-                MainActivity.finishCreatingEvent();
             }
         });
     }

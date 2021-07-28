@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.fbu_final_project.adapters.ImagePickerAdapter;
 import com.example.fbu_final_project.databinding.ActivityImagePickerBinding;
 import com.example.fbu_final_project.models.DriveFile;
+import com.r0adkll.slidr.Slidr;
 
 import org.parceler.Parcels;
 
@@ -22,7 +23,7 @@ public class ImagePickerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Slidr.attach(this);
         binding = ActivityImagePickerBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());

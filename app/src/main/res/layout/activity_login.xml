@@ -42,7 +42,8 @@
         android:layout_marginTop="16dp"
         android:text="@string/log_in"
         tools:layout_editor_absoluteX="144dp"
-        tools:layout_editor_absoluteY="217dp" />
+        tools:layout_editor_absoluteY="217dp"
+        android:padding="10dp"/>
 
     <com.royrodriguez.transitionbutton.TransitionButton
         android:id="@+id/btnSignup"
@@ -53,5 +54,6 @@
         android:layout_marginTop="16dp"
         android:text="@string/sign_up"
         tools:layout_editor_absoluteX="200dp"
-        tools:layout_editor_absoluteY="332dp" />
+        tools:layout_editor_absoluteY="332dp"
+        android:padding="10dp"/>
 </RelativeLayout>

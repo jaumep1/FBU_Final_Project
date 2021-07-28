@@ -117,11 +117,6 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    public static void finishCreatingEvent() {
-        binding.bottomNavigation.setSelectedItemId(R.id.miEventsFeed);
-        Toast.makeText(context, "Event created!", Toast.LENGTH_SHORT).show();
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
