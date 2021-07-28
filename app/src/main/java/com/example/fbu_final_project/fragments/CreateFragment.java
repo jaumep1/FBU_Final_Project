@@ -225,8 +225,6 @@ public class CreateFragment extends Fragment {
                                 binding.tvStartDate.setText(DateFormat.format("MM/dd/yyyy", calendar));
                             }
                         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
-
-                //datePickerDialog.updateDate(year, month, day);
                 datePickerDialog.show();
             }
         });

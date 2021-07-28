@@ -5,15 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".fragments.EventsFeedFragment">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeContainer"
+    <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/rvTagsFilter"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp">
+        android:id="@+id/swipeRefresh">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvEvents"
@@ -21,7 +16,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true" />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTagsFilter"

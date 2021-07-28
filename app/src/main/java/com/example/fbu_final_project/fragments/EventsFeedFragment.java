@@ -1,6 +1,7 @@
 package com.example.fbu_final_project.fragments;
 
 import android.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,9 +35,12 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.boltsinternal.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 public class EventsFeedFragment extends Fragment {
 
@@ -49,6 +53,7 @@ public class EventsFeedFragment extends Fragment {
     TagsAdapter tagsAdapter;
     LinearLayoutManager feedManager;
     LinearLayoutManager tagsManager;
+    WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
 
     public EventsFeedFragment() {
         // Required empty public constructor
@@ -123,28 +128,14 @@ public class EventsFeedFragment extends Fragment {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(runnable, 1000); // run in 1 second
 
-        // Setup refresh listener which triggers new data loading
-        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                feedAdapter.clear();
+        mWaveSwipeRefreshLayout = binding.swipeRefresh;
+        mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
+            @Override public void onRefresh() {
                 queryEvents();
-                for (int i = 0; i < binding.rvTagsFilter.getChildCount(); i++) {
-                    TagsAdapter.ViewHolder holder =
-                            (TagsAdapter.ViewHolder) binding.rvTagsFilter.findViewHolderForAdapterPosition(i);
-
-                    holder.binding.cbTag.setChecked(false);
-
-                }
-                binding.swipeContainer.setRefreshing(false);
+                queryTags();
+                mWaveSwipeRefreshLayout.setRefreshing(false);
             }
         });
-
-        // Configure the refreshing colors
-        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
     }
 
     @Override
