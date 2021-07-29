@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.logout) {
+        if (item.getItemId() == R.id.miLogout) {
             Log.d(TAG, "Logout clicked");
             ParseUser.logOutInBackground(new LogOutCallback() {
                 @Override
@@ -102,11 +102,10 @@ public class MainActivity extends AppCompatActivity {
                     goLoginActivity();
                 }
             });
-        } else if (item.getItemId() == R.id.profile) {
+        } else if (item.getItemId() == R.id.miProfile) {
             Log.d(TAG, "Profile button clicked");
-            android.app.Fragment fragment = new PersonalProfileFragment();
-            activeFragment = fragment;
-            fragmentManager.beginTransaction().replace(binding.flContainer.getId(), fragment).commit();
+            Intent i = new Intent(context, DetailsActivity.class);
+            context.startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }

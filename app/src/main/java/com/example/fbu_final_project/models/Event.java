@@ -111,6 +111,4 @@ public class Event extends ParseObject {
     public String getPoster() {
         return getString(KEY_IMAGE);
     }
-
-
 }

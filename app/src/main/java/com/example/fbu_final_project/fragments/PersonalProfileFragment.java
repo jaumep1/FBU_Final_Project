@@ -37,10 +37,6 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.r0adkll.slidr.Slidr;
-import com.r0adkll.slidr.model.SlidrConfig;
-import com.r0adkll.slidr.model.SlidrInterface;
-import com.r0adkll.slidr.model.SlidrPosition;
 
 import java.io.File;
 import java.util.ArrayList;

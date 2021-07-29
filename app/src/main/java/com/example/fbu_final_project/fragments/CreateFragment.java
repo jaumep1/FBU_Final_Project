@@ -69,9 +69,7 @@ public class CreateFragment extends Fragment {
 
     public DriveFile selectedImage;
 
-    public CreateFragment() {
-        // Required empty public constructor
-    }
+    public CreateFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

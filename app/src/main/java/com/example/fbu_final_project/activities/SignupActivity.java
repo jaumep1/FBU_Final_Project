@@ -31,6 +31,7 @@ public class SignupActivity extends AppCompatActivity {
         ActivitySignupBinding binding = ActivitySignupBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar);
 
         binding.btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override

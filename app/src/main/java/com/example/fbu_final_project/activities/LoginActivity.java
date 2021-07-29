@@ -25,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
         ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar);
 
         if (ParseUser.getCurrentUser() != null) {
             goMainActivity();

@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".activities.ImagePickerActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarSplitStyle"
+        app:titleTextColor="@color/white"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvImages"
         android:layout_width="match_parent"
@@ -21,5 +30,8 @@
         android:id="@+id/tvSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/select_image" />
+        android:layout_below="@id/toolbar"
+        android:text="@string/select_image"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 </RelativeLayout>

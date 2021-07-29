@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.fbu_final_project.activities.EventDetailsActivity;
+import com.example.fbu_final_project.activities.DetailsActivity;
 import com.example.fbu_final_project.activities.ImagePickerActivity;
 import com.example.fbu_final_project.models.DriveFile;
 import com.example.fbu_final_project.models.Event;
@@ -69,7 +69,7 @@ public class GoogleApplication {
         scopes.add(CalendarScopes.CALENDAR);
 
         // Load client secrets
-        InputStream in = EventDetailsActivity.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+        InputStream in = DetailsActivity.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
         }

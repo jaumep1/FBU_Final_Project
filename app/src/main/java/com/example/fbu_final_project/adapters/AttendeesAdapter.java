@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.fbu_final_project.activities.EventDetailsActivity;
+import com.example.fbu_final_project.activities.DetailsActivity;
 import com.example.fbu_final_project.databinding.ItemAttendeeBinding;
 import com.example.fbu_final_project.fragments.UserProfileFragment;
 import com.example.fbu_final_project.models.User;
@@ -23,7 +23,7 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.View
     List<User> attendees;
     Activity activity;
 
-    public AttendeesAdapter(Context context, List<User> attendees, EventDetailsActivity activity) {
+    public AttendeesAdapter(Context context, List<User> attendees, DetailsActivity activity) {
         this.context = context;
         this.attendees = attendees;
         this.activity = activity;
@@ -70,8 +70,10 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.View
         public void onClick(View v) {
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
-                ((EventDetailsActivity) activity)
-                        .loadProfile(new UserProfileFragment(attendees.get(position), true));
+                UserProfileFragment fragment = new UserProfileFragment();
+                fragment.setUserDetails(attendees.get(position), true);
+                ((DetailsActivity) activity)
+                        .loadProfile(fragment);
             }
         }
     }

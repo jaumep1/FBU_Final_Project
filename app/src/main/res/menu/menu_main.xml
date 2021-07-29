@@ -10,9 +10,9 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
     <item
-        android:id="@+id/profile"
+        android:id="@+id/miProfile"
         android:title="@string/profile" />
     <item
-        android:id="@+id/logout"
+        android:id="@+id/miLogout"
         android:title="@string/logout" />
 </menu>

@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.fbu_final_project.activities.EventDetailsActivity;
+import com.example.fbu_final_project.activities.DetailsActivity;
 import com.example.fbu_final_project.databinding.ItemEventBinding;
 import com.example.fbu_final_project.models.Event;
 
@@ -68,9 +68,9 @@ public class EventsFeedAdapter extends RecyclerView.Adapter<EventsFeedAdapter.Vi
             int position = getAdapterPosition();
 
             if (position != RecyclerView.NO_POSITION) {
-                Intent i = new Intent(context, EventDetailsActivity.class);
+                Intent i = new Intent(context, DetailsActivity.class);
                 i.putExtra(Event.class.getSimpleName(), Parcels.wrap(events.get(position)));
-                ((Activity) context).startActivityForResult(i, LOAD_USER_PROFILE_CODE);
+                context.startActivity(i);
             }
         }
 

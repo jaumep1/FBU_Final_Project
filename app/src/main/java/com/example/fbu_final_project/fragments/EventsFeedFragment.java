@@ -1,7 +1,6 @@
 package com.example.fbu_final_project.fragments;
 
 import android.app.Fragment;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +20,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.adapters.EventsFeedAdapter;
@@ -35,7 +33,6 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.boltsinternal.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +52,7 @@ public class EventsFeedFragment extends Fragment {
     LinearLayoutManager tagsManager;
     WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
 
-    public EventsFeedFragment() {
-        // Required empty public constructor
-    }
+    public EventsFeedFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

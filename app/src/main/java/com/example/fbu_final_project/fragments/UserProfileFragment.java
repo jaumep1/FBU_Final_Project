@@ -1,14 +1,13 @@
 package com.example.fbu_final_project.fragments;
 
-import android.util.Log;
-
 import com.example.fbu_final_project.models.User;
 
 public class UserProfileFragment extends PersonalProfileFragment {
     User profile;
 
-    public UserProfileFragment(User user, boolean attending) {
-        super();
+    public UserProfileFragment(){}
+
+    public void setUserDetails(User user, boolean attending) {
         this.profile = user;
         isAttendee = attending;
     }

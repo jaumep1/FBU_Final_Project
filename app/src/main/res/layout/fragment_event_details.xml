@@ -59,13 +59,14 @@
         android:layout_marginEnd="5dp"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <Button
+    <com.royrodriguez.transitionbutton.TransitionButton
         android:id="@+id/btnSubscribe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvDescription"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
+        android:padding="10dp"
         tools:text="Subscribe" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

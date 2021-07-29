@@ -35,7 +35,6 @@ public class PersonalEventsFragment extends EventsFeedFragment {
         query.include(Event.KEY_END_TIME);
         query.include(Event.KEY_IMAGE);
 
-
         query.whereContainedIn(Event.KEY_OBJECT_ID, eventIds);
 
         query.setLimit(20);

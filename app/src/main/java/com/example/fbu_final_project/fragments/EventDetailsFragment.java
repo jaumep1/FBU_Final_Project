@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.fbu_final_project.R;
-import com.example.fbu_final_project.activities.EventDetailsActivity;
+import com.example.fbu_final_project.activities.DetailsActivity;
 import com.example.fbu_final_project.activities.LoginActivity;
 import com.example.fbu_final_project.adapters.AttendeesAdapter;
 import com.example.fbu_final_project.applications.GoogleApplication;
@@ -31,9 +31,6 @@ import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.r0adkll.slidr.model.SlidrInterface;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,12 +69,12 @@ public class EventDetailsFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         client = new GoogleApplication();
 
         attendees = new ArrayList<>();
-        adapter = new AttendeesAdapter(getContext(), attendees, (EventDetailsActivity) getActivity());
+        adapter = new AttendeesAdapter(getContext(), attendees, (DetailsActivity) getActivity());
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         binding.rvAttendees.setLayoutManager(manager);
         DividerItemDecoration dividerItemDecoration =
@@ -172,9 +169,9 @@ public class EventDetailsFragment extends Fragment {
                             Log.e(TAG, "Issue with getting tags", e);
                             return;
                         }
-                        android.app.Fragment fragment = new UserProfileFragment(attendeeList.get(0),
-                                false);
-                        ((EventDetailsActivity) getActivity()).loadProfile(fragment);
+                        UserProfileFragment fragment = new UserProfileFragment();
+                        fragment.setUserDetails(attendeeList.get(0), false);
+                        ((DetailsActivity) getActivity()).loadProfile(fragment);
                     }
                 });
             }
@@ -183,7 +180,7 @@ public class EventDetailsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.logout) {
+        if (item.getItemId() == R.id.miLogout) {
             //Compose icon has been clicked
             Log.d(TAG, "Logout clicked");
             ParseUser.logOutInBackground(new LogOutCallback() {

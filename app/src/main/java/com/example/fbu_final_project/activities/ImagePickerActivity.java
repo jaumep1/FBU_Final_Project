@@ -27,6 +27,7 @@ public class ImagePickerActivity extends AppCompatActivity {
         binding = ActivityImagePickerBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar);
 
         ArrayList<DriveFile> files = Parcels.unwrap(getIntent().getParcelableExtra("files"));
 
