@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Slidr.attach(this);
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         context = this;
 

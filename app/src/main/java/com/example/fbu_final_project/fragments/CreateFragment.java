@@ -142,19 +142,23 @@ public class CreateFragment extends Fragment {
                 // Start the loading animation when the user tap the button
                 binding.btnCreate.startAnimation();
                 boolean isSuccessful;
+                boolean filled;
                 try {
+                    filled = fieldsInputted();
                     createEvent();
                     isSuccessful = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                     isSuccessful = false;
+                    filled = fieldsInputted();
                 }
                 final Handler handler = new Handler();
                 boolean finalIsSuccessful = isSuccessful;
+                boolean finalFilled = filled;
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (finalIsSuccessful && fieldsInputted()) {
+                        if (finalIsSuccessful && finalFilled) {
                             binding.btnCreate.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND, new TransitionButton.OnAnimationStopEndListener() {
                                 @Override
                                 public void onAnimationStopEnd() {
@@ -164,7 +168,7 @@ public class CreateFragment extends Fragment {
                             });
                         } else {
                             binding.btnCreate.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
-                            if (fieldsInputted()) {
+                            if (finalFilled) {
                                 Toast.makeText(getContext(), "Error creating event!",
                                         Toast.LENGTH_SHORT).show();
                             } else {
@@ -318,7 +322,7 @@ public class CreateFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void createEvent() throws IOException {
+    private void createEvent() {
         Event event = new Event();
         String fullname = String.format("%s %s", ((User) ParseUser.getCurrentUser()).getFirstname(),
                 ((User) ParseUser.getCurrentUser()).getLastname());

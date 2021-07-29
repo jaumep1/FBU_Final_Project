@@ -6,9 +6,10 @@
     tools:context=".fragments.EventsFeedFragment">
 
     <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/swipeRefresh">
+        android:layout_above="@id/rvTagsFilter">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvEvents"

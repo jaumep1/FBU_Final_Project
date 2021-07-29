@@ -13,7 +13,8 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarSplitStyle"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/white"
+        android:textAlignment="center"/>
 
     <EditText
         android:id="@+id/etUsername"
