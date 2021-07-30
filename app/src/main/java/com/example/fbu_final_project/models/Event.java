@@ -98,6 +98,10 @@ public class Event extends ParseObject {
         return ((ArrayList<User>) get(KEY_ATTENDEES));
     }
 
+    public void setAttendees(ArrayList<User> users) {
+        put(KEY_ATTENDEES, users);
+    }
+
     public void createTags () {
         put(KEY_TAGS, new ArrayList<Tag>());
     }
@@ -108,6 +112,10 @@ public class Event extends ParseObject {
 
     public ArrayList<Tag> getTags() {
         return ((ArrayList<Tag>) get(KEY_TAGS));
+    }
+
+    public void setTags(ArrayList<Tag> tags) {
+        put(KEY_TAGS, tags);
     }
 
     public void setPoster(String filePath) {

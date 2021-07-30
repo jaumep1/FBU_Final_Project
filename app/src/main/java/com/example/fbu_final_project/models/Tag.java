@@ -8,8 +8,12 @@ public class Tag extends ParseObject {
 
     public static final String KEY_TAG = "tag";
     public String getTag() {
-        return getString("tag");
+        return getString(KEY_TAG);
     }
+    public void setTag(String tag) {
+        put(KEY_TAG, tag);
+    }
+
 
 
 }
