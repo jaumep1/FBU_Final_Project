@@ -27,9 +27,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.fbu_final_project.R;
+import com.example.fbu_final_project.activities.MainActivity;
 import com.example.fbu_final_project.adapters.EventsFeedAdapter;
 import com.example.fbu_final_project.databinding.FragmentProfileBinding;
 import com.example.fbu_final_project.models.Event;
+import com.example.fbu_final_project.models.Tag;
 import com.example.fbu_final_project.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -38,8 +40,15 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -77,7 +86,7 @@ public class PersonalProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -99,7 +108,11 @@ public class PersonalProfileFragment extends Fragment {
                 new DividerItemDecoration(binding.rvEvents.getContext(),
                         manager.getOrientation());
         binding.rvEvents.addItemDecoration(dividerItemDecoration);
-        queryEvents();
+        try {
+            loadEventsFromCacheData(MainActivity.getEvents());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -223,44 +236,59 @@ public class PersonalProfileFragment extends Fragment {
         }
     }
 
-    private void queryEvents() {
-        ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    protected void loadEventsFromCacheData(JSONArray jsonArray) throws JSONException {
+        events.clear();
+        activeEvents.clear();
 
-        query.include(Event.KEY_EVENT_NAME);
-        query.include(Event.KEY_EVENT_DESCRIPTION);
-        query.include(Event.KEY_AUTHOR);
-        query.include(Event.KEY_START_TIME);
-        query.include(Event.KEY_END_TIME);
-        query.include(Event.KEY_IMAGE);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
 
-        if (isAttendee) {
             ArrayList<String> eventIds = new ArrayList<>();
 
             for (Event sub : user.getSubscriptions()) {
                 eventIds.add(sub.getObjectId());
             }
 
-            query.whereContainedIn(Event.KEY_OBJECT_ID, eventIds);
+            if (!isAttendee && jsonObject.getString("created_by").equals(user.getObjectId()) ||
+                    (isAttendee && eventIds.contains(jsonObject.getString("objectID")))) {
 
-        } else {
-            query.whereEqualTo(Event.KEY_AUTHOR, String.format("%s %s", user.getFirstname(), user.getLastname()));
-        }
+                Event newEvent = new Event();
+                newEvent.setObjectId(jsonObject.getString("objectID"));
+                newEvent.setCreator(jsonObject.getString("created_by"));
+                newEvent.setAuthor(jsonObject.getString("author"));
+                newEvent.setName(jsonObject.getString("name"));
+                newEvent.setDescription(jsonObject.getString("description"));
+                newEvent.setPoster(jsonObject.getString("poster"));
 
-        query.setLimit(20);
-        query.addDescendingOrder("createdAt");
-        query.findInBackground(new FindCallback<Event>() {
-            @Override
-            public void done(List<Event> feed, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting events", e);
-                    return;
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("eee MMM dd HH:mm:ss zzz yyyy");
+
+                ZonedDateTime start = ZonedDateTime.parse(jsonObject.getString("startTime"), dtf);
+                newEvent.setStartTime(Date.from(start.toInstant()));
+                ZonedDateTime end = ZonedDateTime.parse(jsonObject.getString("endTime"), dtf);
+                newEvent.setEndTime(Date.from(end.toInstant()));
+
+                JSONArray tagsJsonArray = new JSONArray(jsonObject.getString("tags"));
+                ArrayList<Tag> eventTagsFromJson = new ArrayList<>();
+                for (int j = 0; j < tagsJsonArray.length(); j++) {
+                    Tag newTag = new Tag();
+                    newTag.setObjectId(tagsJsonArray.getString(j));
+                    eventTagsFromJson.add(newTag);
                 }
-                activeEvents.clear();
-                events.clear();
-                activeEvents.addAll(feed);
-                events.addAll(feed);
-                adapter.notifyDataSetChanged();
+                newEvent.setTags(eventTagsFromJson);
+
+                JSONArray attendeesJsonArray = new JSONArray(jsonObject.getString("attendees"));
+                ArrayList<User> eventAttendeesFromJson = new ArrayList<>();
+                for (int j = 0; j < attendeesJsonArray.length(); j++) {
+                    User newUser = new User();
+                    newUser.setObjectId(attendeesJsonArray.getString(j));
+                    eventAttendeesFromJson.add(newUser);
+                }
+                newEvent.setAttendees(eventAttendeesFromJson);
+
+                events.add(newEvent);
+                activeEvents.add(newEvent);
             }
-        });
+        }
     }
 }

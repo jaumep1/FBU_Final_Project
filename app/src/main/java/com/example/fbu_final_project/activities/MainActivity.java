@@ -173,7 +173,9 @@ public class MainActivity extends AppCompatActivity {
                     ex.printStackTrace();
                 }
             }
-
+            bufferedWriter.close();
+            outputWriter.close();
+            outputStream.close();
             return success;
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -200,7 +202,9 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 return null;
             }
-
+            inputStream.close();
+            inputreader.close();
+            buffreader.close();
             return new JSONArray(text.toString());
         } catch(Exception ex) {
             return null;

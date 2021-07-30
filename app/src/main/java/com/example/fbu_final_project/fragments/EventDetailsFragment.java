@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.activities.DetailsActivity;
 import com.example.fbu_final_project.activities.LoginActivity;
+import com.example.fbu_final_project.activities.MainActivity;
 import com.example.fbu_final_project.adapters.AttendeesAdapter;
 import com.example.fbu_final_project.applications.GoogleApplication;
 import com.example.fbu_final_project.databinding.FragmentEventDetailsBinding;
@@ -131,6 +132,7 @@ public class EventDetailsFragment extends Fragment {
                             Toast.LENGTH_SHORT).show();
                     binding.btnSubscribe.setText(R.string.unsubscribe);
                 }
+                MainActivity.loaded = false;
             }
         });
 
@@ -205,8 +207,6 @@ public class EventDetailsFragment extends Fragment {
 
     private void loadAttendees() {
         ArrayList<String> attendeeIds = new ArrayList<>();
-
-        //TODO: PROBABLY FIX THIS
 
         for (User attendee : event.getAttendees()) {
             if (!attendeeIds.contains(attendee.getObjectId())) {

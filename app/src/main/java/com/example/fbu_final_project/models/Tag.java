@@ -10,10 +10,4 @@ public class Tag extends ParseObject {
     public String getTag() {
         return getString(KEY_TAG);
     }
-    public void setTag(String tag) {
-        put(KEY_TAG, tag);
-    }
-
-
-
 }

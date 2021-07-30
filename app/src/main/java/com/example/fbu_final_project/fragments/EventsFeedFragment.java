@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.fbu_final_project.R;
-import com.example.fbu_final_project.activities.DetailsActivity;
 import com.example.fbu_final_project.activities.MainActivity;
 import com.example.fbu_final_project.adapters.EventsFeedAdapter;
 import com.example.fbu_final_project.adapters.TagsAdapter;
@@ -41,12 +40,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -116,7 +110,7 @@ public class EventsFeedFragment extends Fragment {
 
         queryTags();
         try {
-            queryEvents();
+            fetchEvents();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -149,7 +143,7 @@ public class EventsFeedFragment extends Fragment {
             @Override public void onRefresh() {
                 MainActivity.loaded = false;
                 try {
-                    queryEvents();
+                    fetchEvents();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -157,6 +151,17 @@ public class EventsFeedFragment extends Fragment {
                 mWaveSwipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            fetchEvents();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -270,93 +275,94 @@ public class EventsFeedFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    protected void queryEvents() throws JSONException {
+    protected void fetchEvents() throws JSONException {
+        events.clear();
+        activeEvents.clear();
+
         if (MainActivity.loaded) {
-            events.clear();
-            activeEvents.clear();
-
             JSONArray eventsJsonArray = MainActivity.getEvents();
-
-            for (int i = 0; i < eventsJsonArray.length(); i++) {
-                JSONObject jsonObject = (JSONObject) eventsJsonArray.get(i);
-
-                Log.i("starting", jsonObject.toString());
-
-                Event newEvent = new Event();
-                newEvent.setObjectId(jsonObject.getString("objectID"));
-                newEvent.setCreator(jsonObject.getString("created_by"));
-                newEvent.setAuthor(jsonObject.getString("author"));
-                newEvent.setName(jsonObject.getString("name"));
-                newEvent.setDescription(jsonObject.getString("description"));
-                newEvent.setPoster(jsonObject.getString("poster"));
-
-
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("eee MMM dd HH:mm:ss zzz yyyy");
-
-                ZonedDateTime start = ZonedDateTime.parse(jsonObject.getString("startTime"), dtf);
-                newEvent.setStartTime(Date.from(start.toInstant()));
-                ZonedDateTime end = ZonedDateTime.parse(jsonObject.getString("endTime"), dtf);
-                newEvent.setEndTime(Date.from(end.toInstant()));
-
-                JSONArray tagsJsonArray = new JSONArray(jsonObject.getString("tags"));
-                ArrayList<Tag> eventTagsFromJson = new ArrayList<>();
-                for (int j = 0; j < tagsJsonArray.length(); j++) {
-                    Tag newTag = new Tag();
-                    newTag.setTag(tagsJsonArray.getString(j));
-                    eventTagsFromJson.add(newTag);
-                }
-                newEvent.setTags(eventTagsFromJson);
-
-                JSONArray attendeesJsonArray = new JSONArray(jsonObject.getString("attendees"));
-                ArrayList<User> eventAttendeesFromJson = new ArrayList<>();
-                for (int j = 0; j< attendeesJsonArray.length(); j++) {
-                    User newUser = new User();
-                    newUser.setObjectId(attendeesJsonArray.getString(j));
-                    eventAttendeesFromJson.add(newUser);
-                }
-                newEvent.setAttendees(eventAttendeesFromJson);
-
-                events.add(newEvent);
-                activeEvents.add(newEvent);
-                Log.i("finished", jsonObject.toString());
-            }
+            loadEventsFromCacheData(eventsJsonArray);
 
         } else {
-            Log.i("waka", String.valueOf(MainActivity.loaded));
-            Log.i("waka", String.valueOf(MainActivity.getEvents()));
+            queryEvents();
+        }
+    }
 
-            ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
+    private void queryEvents() {
+        ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
 
-            query.include(Event.KEY_EVENT_NAME);
-            query.include(Event.KEY_EVENT_DESCRIPTION);
-            query.include(Event.KEY_AUTHOR);
-            query.include(Event.KEY_START_TIME);
-            query.include(Event.KEY_END_TIME);
-            query.include(Event.KEY_IMAGE);
+        query.include(Event.KEY_EVENT_NAME);
+        query.include(Event.KEY_EVENT_DESCRIPTION);
+        query.include(Event.KEY_AUTHOR);
+        query.include(Event.KEY_START_TIME);
+        query.include(Event.KEY_END_TIME);
+        query.include(Event.KEY_IMAGE);
 
-            query.setLimit(20);
-            query.addDescendingOrder("createdAt");
-            query.findInBackground(new FindCallback<Event>() {
-                @RequiresApi(api = Build.VERSION_CODES.M)
-                @Override
-                public void done(List<Event> feed, ParseException e) {
-                    if (e != null) {
-                        Log.e(TAG, "Issue with getting events", e);
-                        return;
-                    }
-                    events.clear();
-                    events.addAll(feed);
-                    activeEvents.clear();
-                    activeEvents.addAll(feed);
-                    feedAdapter.notifyDataSetChanged();
-                    try {
-                        MainActivity.cacheEvents(events);
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-                    MainActivity.loaded = true;
+        query.setLimit(20);
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<Event>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void done(List<Event> feed, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting events", e);
+                    return;
                 }
-            });
+                events.clear();
+                events.addAll(feed);
+                activeEvents.clear();
+                activeEvents.addAll(feed);
+                feedAdapter.notifyDataSetChanged();
+                try {
+                    MainActivity.cacheEvents(events);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                MainActivity.loaded = true;
+            }
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    protected void loadEventsFromCacheData(JSONArray jsonArray) throws JSONException {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+
+            Event newEvent = new Event();
+            newEvent.setObjectId(jsonObject.getString("objectID"));
+            newEvent.setCreator(jsonObject.getString("created_by"));
+            newEvent.setAuthor(jsonObject.getString("author"));
+            newEvent.setName(jsonObject.getString("name"));
+            newEvent.setDescription(jsonObject.getString("description"));
+            newEvent.setPoster(jsonObject.getString("poster"));
+
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("eee MMM dd HH:mm:ss zzz yyyy");
+
+            ZonedDateTime start = ZonedDateTime.parse(jsonObject.getString("startTime"), dtf);
+            newEvent.setStartTime(Date.from(start.toInstant()));
+            ZonedDateTime end = ZonedDateTime.parse(jsonObject.getString("endTime"), dtf);
+            newEvent.setEndTime(Date.from(end.toInstant()));
+
+            JSONArray tagsJsonArray = new JSONArray(jsonObject.getString("tags"));
+            ArrayList<Tag> eventTagsFromJson = new ArrayList<>();
+            for (int j = 0; j < tagsJsonArray.length(); j++) {
+                Tag newTag = new Tag();
+                newTag.setObjectId(tagsJsonArray.getString(j));
+                eventTagsFromJson.add(newTag);
+            }
+            newEvent.setTags(eventTagsFromJson);
+
+            JSONArray attendeesJsonArray = new JSONArray(jsonObject.getString("attendees"));
+            ArrayList<User> eventAttendeesFromJson = new ArrayList<>();
+            for (int j = 0; j< attendeesJsonArray.length(); j++) {
+                User newUser = new User();
+                newUser.setObjectId(attendeesJsonArray.getString(j));
+                eventAttendeesFromJson.add(newUser);
+            }
+            newEvent.setAttendees(eventAttendeesFromJson);
+
+            events.add(newEvent);
+            activeEvents.add(newEvent);
         }
     }
 }
