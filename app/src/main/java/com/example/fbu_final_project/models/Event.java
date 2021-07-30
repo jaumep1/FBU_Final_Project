@@ -1,8 +1,14 @@
 package com.example.fbu_final_project.models;
 
+import androidx.annotation.NonNull;
+
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
@@ -110,5 +116,40 @@ public class Event extends ParseObject {
 
     public String getPoster() {
         return getString(KEY_IMAGE);
+    }
+
+    @NonNull
+    @NotNull
+    @Override
+    public String toString() {
+        return toJSON().toString();
+    }
+
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("objectID", getObjectId());
+            jsonObject.put("created_by", getCreator());
+            jsonObject.put("author", getAuthor());
+            jsonObject.put("name", getName());
+            jsonObject.put("description", getDescription());
+            jsonObject.put("startTime", getStartTime());
+            jsonObject.put("endTime", getEndTime());
+            JSONArray userList = new JSONArray();
+            for (User user : getAttendees()) {
+                userList.put(user.getObjectId());
+            }
+            JSONArray tagList = new JSONArray();
+            jsonObject.put("attendees", userList);
+            for (Tag tag : getTags()) {
+                tagList.put(tag.getObjectId());
+            }
+            jsonObject.put("tags", tagList);
+            jsonObject.put("poster", getPoster());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+
     }
 }

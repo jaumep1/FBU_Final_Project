@@ -206,6 +206,8 @@ public class EventDetailsFragment extends Fragment {
     private void loadAttendees() {
         ArrayList<String> attendeeIds = new ArrayList<>();
 
+        //TODO: PROBABLY FIX THIS
+
         for (User attendee : event.getAttendees()) {
             if (!attendeeIds.contains(attendee.getObjectId())) {
                 attendeeIds.add(attendee.getObjectId());

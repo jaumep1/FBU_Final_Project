@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.fbu_final_project.R;
+import com.example.fbu_final_project.activities.MainActivity;
 import com.example.fbu_final_project.adapters.EventsFeedAdapter;
 import com.example.fbu_final_project.adapters.TagsAdapter;
 import com.example.fbu_final_project.databinding.FragmentEventsFeedBinding;
@@ -34,6 +35,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -256,6 +259,7 @@ public class EventsFeedFragment extends Fragment {
         query.setLimit(20);
         query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<Event>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void done(List<Event> feed, ParseException e) {
                 if (e != null) {
@@ -267,6 +271,11 @@ public class EventsFeedFragment extends Fragment {
                 activeEvents.clear();
                 activeEvents.addAll(feed);
                 feedAdapter.notifyDataSetChanged();
+                try {
+                    ((MainActivity) getActivity()).cacheEvents(events);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
     }

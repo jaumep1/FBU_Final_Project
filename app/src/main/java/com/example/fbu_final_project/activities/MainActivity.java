@@ -23,13 +23,26 @@ import com.example.fbu_final_project.fragments.EventsFeedFragment;
 import com.example.fbu_final_project.fragments.PersonalEventsFragment;
 import com.example.fbu_final_project.fragments.PersonalProfileFragment;
 import com.example.fbu_final_project.models.DriveFile;
+import com.example.fbu_final_project.models.Event;
 import com.google.android.material.navigation.NavigationBarView;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.r0adkll.slidr.Slidr;
 
+import org.json.JSONObject;
 import org.parceler.Parcels;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -129,5 +142,63 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             ((PersonalProfileFragment) activeFragment).handleResult(requestCode, resultCode, data);
         }
+    }
+
+    public boolean cacheEvents(List<Event> events) throws IOException {
+        String filename = "events";
+        File file = new File(context.getCacheDir(), filename);
+        try {
+            FileOutputStream outputStream = new FileOutputStream(file);
+            OutputStreamWriter outputWriter = new OutputStreamWriter(outputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(outputWriter);
+            boolean success = false;
+
+            try {
+                for (Event event : events) {
+                    bufferedWriter.write(event.toString());
+                }
+                success = true;
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                try {
+                    bufferedWriter.close();
+                } catch(Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            return success;
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public String getEvents() {
+        String filename = "events";
+        File file = new File(context.getCacheDir(), filename);
+        try {
+            FileInputStream inputStream = new FileInputStream(file);
+            InputStreamReader inputreader = new InputStreamReader(inputStream);
+            BufferedReader buffreader = new BufferedReader(inputreader);
+
+            String line;
+            StringBuilder text = new StringBuilder();
+
+            try {
+                while (( line = buffreader.readLine()) != null) {
+                    text.append(line);
+                    text.append('\n');
+                }
+            } catch (IOException e) {
+                return null;
+            }
+
+            return text.toString();
+        } catch(Exception ex) {
+            return null;
+        }
+
     }
 }
