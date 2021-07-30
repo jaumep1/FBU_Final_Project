@@ -30,7 +30,7 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.r0adkll.slidr.Slidr;
 
-import org.json.JSONObject;
+import org.json.JSONArray;
 import org.parceler.Parcels;
 
 import java.io.BufferedReader;
@@ -38,7 +38,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -57,9 +56,14 @@ public class MainActivity extends AppCompatActivity {
     public static ActivityMainBinding binding;
     public static Context context;
 
+    public static boolean loaded;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loaded = false;
+        Slidr.attach(this);
+        Log.i("waka", "created");
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         context = this;
 
@@ -144,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean cacheEvents(List<Event> events) throws IOException {
+    public static boolean cacheEvents(List<Event> events) throws IOException {
         String filename = "events";
         File file = new File(context.getCacheDir(), filename);
         try {
@@ -154,9 +158,11 @@ public class MainActivity extends AppCompatActivity {
             boolean success = false;
 
             try {
+                JSONArray jsonArray = new JSONArray();
                 for (Event event : events) {
-                    bufferedWriter.write(event.toString());
+                    jsonArray.put(event.toJSON());
                 }
+                bufferedWriter.write(jsonArray.toString());
                 success = true;
             } catch(Exception ex) {
                 ex.printStackTrace();
@@ -175,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public String getEvents() {
+    public static JSONArray getEvents() {
         String filename = "events";
         File file = new File(context.getCacheDir(), filename);
         try {
@@ -195,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
             }
 
-            return text.toString();
+            return new JSONArray(text.toString());
         } catch(Exception ex) {
             return null;
         }

@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.fbu_final_project.R;
+import com.example.fbu_final_project.activities.DetailsActivity;
 import com.example.fbu_final_project.activities.MainActivity;
 import com.example.fbu_final_project.adapters.EventsFeedAdapter;
 import com.example.fbu_final_project.adapters.TagsAdapter;
@@ -129,6 +130,7 @@ public class EventsFeedFragment extends Fragment {
         mWaveSwipeRefreshLayout = binding.swipeRefresh;
         mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override public void onRefresh() {
+                MainActivity.loaded = false;
                 queryEvents();
                 queryTags();
                 mWaveSwipeRefreshLayout.setRefreshing(false);
@@ -247,6 +249,9 @@ public class EventsFeedFragment extends Fragment {
     }
 
     protected void queryEvents(){
+        Log.i("waka", String.valueOf(MainActivity.loaded));
+        Log.i("waka", String.valueOf(MainActivity.getEvents()));
+
         ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
 
         query.include(Event.KEY_EVENT_NAME);
@@ -272,10 +277,11 @@ public class EventsFeedFragment extends Fragment {
                 activeEvents.addAll(feed);
                 feedAdapter.notifyDataSetChanged();
                 try {
-                    ((MainActivity) getActivity()).cacheEvents(events);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                    MainActivity.cacheEvents(events);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
                 }
+                MainActivity.loaded = true;
             }
         });
     }

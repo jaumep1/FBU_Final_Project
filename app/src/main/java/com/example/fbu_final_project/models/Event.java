@@ -118,13 +118,6 @@ public class Event extends ParseObject {
         return getString(KEY_IMAGE);
     }
 
-    @NonNull
-    @NotNull
-    @Override
-    public String toString() {
-        return toJSON().toString();
-    }
-
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
         try {
