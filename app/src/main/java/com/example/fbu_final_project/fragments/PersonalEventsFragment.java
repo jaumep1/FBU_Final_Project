@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.fbu_final_project.activities.MainActivity;
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.Tag;
 import com.example.fbu_final_project.models.User;
@@ -17,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 
 public class PersonalEventsFragment extends EventsFeedFragment {
+
+    private static final String TAG = "PersonalEventsFragment";
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -76,6 +80,52 @@ public class PersonalEventsFragment extends EventsFeedFragment {
                 events.add(newEvent);
                 activeEvents.add(newEvent);
             }
+        }
+    }
+
+    @Override
+    protected void queryEvents() {
+        {
+            ArrayList<String> eventIds = new ArrayList<>();
+
+            for (Event event: ((User) ParseUser.getCurrentUser()).getSubscriptions()) {
+                eventIds.add(event.getObjectId());
+            }
+
+            ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
+
+            query.include(Event.KEY_EVENT_NAME);
+            query.include(Event.KEY_EVENT_DESCRIPTION);
+            query.include(Event.KEY_AUTHOR);
+            query.include(Event.KEY_START_TIME);
+            query.include(Event.KEY_END_TIME);
+            query.include(Event.KEY_IMAGE);
+
+            query.whereContainedIn(Event.KEY_OBJECT_ID, eventIds);
+
+            query.setLimit(20);
+            query.addDescendingOrder("createdAt");
+            query.findInBackground(new FindCallback<Event>() {
+                @RequiresApi(api = Build.VERSION_CODES.M)
+                @Override
+                public void done(List<Event> feed, ParseException e) {
+                    if (e != null) {
+                        Log.e(TAG, "Issue with getting events", e);
+                        return;
+                    }
+                    events.clear();
+                    events.addAll(feed);
+                    activeEvents.clear();
+                    activeEvents.addAll(feed);
+                    feedAdapter.notifyDataSetChanged();
+                    try {
+                        MainActivity.cacheEvents(events);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                    MainActivity.loaded = true;
+                }
+            });
         }
     }
 }

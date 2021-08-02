@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         loaded = false;
         Slidr.attach(this);
-        Log.i("waka", "created");
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         context = this;
 

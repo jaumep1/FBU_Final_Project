@@ -135,7 +135,7 @@ public class EventsFeedFragment extends Fragment {
 
         //Wait to set listeners until recylcler view is bound
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(runnable, 1000); // run in 1 second
+        handler.postDelayed(runnable, 200); // run in 1 second
 
         mWaveSwipeRefreshLayout = binding.swipeRefresh;
         mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
@@ -288,7 +288,7 @@ public class EventsFeedFragment extends Fragment {
         }
     }
 
-    private void queryEvents() {
+    protected void queryEvents() {
         ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
 
         query.include(Event.KEY_EVENT_NAME);
