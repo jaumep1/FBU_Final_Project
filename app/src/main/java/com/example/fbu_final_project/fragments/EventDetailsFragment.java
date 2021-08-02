@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -76,7 +77,7 @@ public class EventDetailsFragment extends Fragment {
 
         attendees = new ArrayList<>();
         adapter = new AttendeesAdapter(getContext(), attendees, (DetailsActivity) getActivity());
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        LinearLayoutManager manager = new GridLayoutManager(getContext(), 2);
         binding.rvAttendees.setLayoutManager(manager);
         DividerItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(binding.rvAttendees.getContext(),
