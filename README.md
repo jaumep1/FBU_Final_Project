@@ -8,16 +8,16 @@
 
 ## Overview
 ### Description
-This app will let users save and sign up for events that they are interested in. The app will then store the data of events users sign up for in order to make this information available offline. The app will also let users create events and publish them.
+This app will let users save and sign up for events that they are interested in. The app will also let users create their own events, including uploading event posters. Users will also be able to see a details view of events, in which they can see who is going and export the event to their Google Calendar. Lastly, users will have their own profile of events they created and will be able to see the events that any other user has created or is going to.
 
 ### App Evaluation
 [Evaluation of your app across the following attributes]
-- **Category: Planning**
-- **Mobile: Can view and post event listings and save events with offline details**
+- **Category: Networking**
+- **Mobile: Can view and post event listings, see details of event listings, and see what events others are making/attending**
 - **Story: Users can find and share events with each other in a centralized way**
-- **Market: Individuals looking for interesting events and organizers looking to create interest in their events**
+- **Market: Individuals looking for interesting events and organizers looking to find others interest in their events**
 - **Habit: Users will use this when they are looking for something new or interesting to do. They will also use this app when they want to look up details of events they previously expressed interest in, typically around the time of those events**
-- **Scope: Initially the app will support event sharing and saving. However, if there is time the app could also support following organizers, looking at who else is subscribed to events, and commenting on event pages**
+- **Scope: Initially the app will support event sharing and subscribing. The app will also support looking at who else is subscribed to events and exporting the events to Google Calendar. If there is time the app could also support subscribing to organizers for when they make new events and commenting on event pages**
 
 ## Product Spec
 
@@ -25,78 +25,206 @@ This app will let users save and sign up for events that they are interested in.
 
 **Required Must-have Stories**
 
-* Users must be able to access accounts
-    * Sign up
-    * Sign in
-    * Sign out
-* Users can see a list of events others have created
-* Users can see a details view for individual events
-* Users can create, tag, and publish events
-* Users can select events that they would like to save
-    * Users can subscribe and unsubscribe
-    * Users can access these events offline
-* Users can search events by tag
-* Users can view their saved events through a menu bar item
-* Users can view their saved events offline
+* [x] Users must be able to access accounts
+    * [x] Sign up
+    * [x] Sign in
+    * [x] Sign out
+* [x] Users can see a list of events others have created
+* [x] Users can see a details view for individual events
+* [x] Users can create, tag, and publish events
+* [x] Users can select events that they would like to save
+    * [x] Users can subscribe and unsubscribe
+* [x] Users can search events
+    * [x] Search events by query
+    * [x] Filter feed by tag
+* [x] Users can view their saved events through a tab bar item
+* [x] Users can export events to calendar
 
 **Optional Nice-to-have Stories**
 
-* Users can view details about event organizers
-* Users can comment on event pages
-* Users can see who else subscribes to an event
-* Users can see trending events
-* Users can see their events in a calendar-like view
-* Users can delete events they created
+* [ ] View orients to landscape and portrait mode
+* [x] Users can view their own profile page
+    * [x] Users can set/change a profile image
+* [x] Users can view details about event organizers
+* [x] Users can see who else subscribes to an event
+* [x] Users can swipe to navigate across views
+* [x] Event data is cached across sessions so that it only reloads upon creating the main activity and refreshing the feed
+* [ ] Users can delete events they created
+* [ ] Users can get directions to events
+* [ ] Users can comment on event pages
+* [ ] Users can sign in with Facebook
+* [ ] Users can see trending events
 * ...
 
 ### 2. Screen Archetypes
 
 * Login screen
-   * Users can log into the app
-* Registration screen
+    * Users can log into the app
+    * Users can navigate to the Signup screen
+* Signup screen
     * Users can create a new account
-* Timeline screen
-   * Users can see a list of event listings
-   * Users can scroll through listings
-   * Users can subscribe to events
+* EventsFeed screen
+    * Users can see a list of event listings
+    * Users can scroll through listings
+    * Users can search/sort events
 * Compose screen
     * Users can fill in required fields about event information to create a posting
+    * Users can add images to events from their Google Drive
 * EventDetails screen
     * Users can see the date, time, and location of the event
     * Users can see a brief description of the event from the organizer
+    * Users can add the event to their Google Calendar
+    * Users can subscribe/unsubscribe from events
 * PersonalEvents screen
     * Users can see a list of events they have subscribed to
-    * Users can remove events from the personal events list
+    * Users can remove events from their personal events list
+* PersonalProfile screen
+    * Users can see their own profile
+    * Users can set/change their profile image
+    * Users can see the events that they have created
+* UserProfile screen
+    * Users can see others' profiles
+    * Users can see events that they have created and subscribed to
+* ImagePicker
+    * User can select an image from Google Drive to upload with an event
 
 ### 3. Navigation
 
 **Tab Navigation** (Tab to Screen)
 
-* Timeline
+* EventsFeed
 * PersonalEvents
 * Compose
+* PersonalProfile
 
 **Flow Navigation** (Screen to Screen)
 
 * Login
-   * Registration
+   * Signup
    * Timeline
+* Signup
+    * Login
+    * Timeline
 * Timeline
+   * EventDetails
+* Personal Events
    * EventDetails
 * Compose
     * Timeline
+    * Image Picker
+* Image Picker
+    * Compose
 
 ## Wireframes
 [Add picture of your hand sketched wireframes in this section]
-<img src="https://github.com/jaumep1/EventTracker/blob/main/IMG_9729.png" width=600>
+<img src="https://github.com/jaumep1/EventTracker/blob/main/IMG_9729.png?raw=true" width=600>
 
 ## Schema 
 [This section will be completed in Unit 9]
 ### Models
 - Event
+    - String objectId
+    - String createdAt
+    - String createdBy
+    - String eventTime
+    - String eventName
+    - String eventDescription
+    - File eventPoster
+    - ArrayList\<Tag\> tags
+    - ArrayList\<User\> attendees
 - User
+    - String objectId
+    - String name
+    - String password
+    - File profileImage
+    - ArrayList\<Event\> subscriptions
+- Tag
+    - String tag
 ### Networking
 - Timeline:
-    - Google Calendar API for geting master list of all events created and posting new events
-- [Create basic snippets for each Parse network request]
-- [OPTIONAL: List endpoints if using existing API such as Yelp]
+    - (Read/GET) Query most recent events in chronological order of creation
+       ```
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.include(Post.KEY_USER);
+        query.setLimit(20);
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> posts, ParseException e) {
+                // check for errors
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting posts", e);
+                    return;
+                }
+                //Do stuff 
+            }
+        });
+        ```
+    - (Create/POST) Create a new subscription to an event
+        ```
+        ParseUser user = (User) ParseUser.getCurrentParseUser();
+        user.subscribe(event);
+        event.subscribe(user);
+        
+        ```
+    - (Delete) Delete a subscription to an event
+        ```
+        ParseUser user = (User) ParseUser.getCurrentParseUser();
+        user.unsubscribe(event);
+        event.unsubscribe(user);
+        ```
+- Compose
+    - (Create/POST) Create a new event object
+        ```
+        Event e = new Event(); //Make sure Event is a Parse class
+        //Add event details
+        
+        e.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG ,"Error while saving post", e);
+                }
+                Log.i(TAG, "Post save was successful!");
+            }
+        });
+        ```
+- Personal Events
+    - (Read/GET) Query most events a user is subscribed to in chronological order
+        ```
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.whereContainedIn("objectId", ParseUser.getCurrenParseUser().subscriptions)
+        query.setLimit(20);
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> posts, ParseException e) {
+                // check for errors
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting posts", e);
+                    return;
+                }
+                //Do stuff 
+            }
+        });
+        ```
+    - (Delete) Delete a subscription to an event
+        ```
+        ParseUser user = ParseUser.getCurrentParseUser();
+        user.unsubscribe(event.objectId);
+        ```
+- EventDetails
+     - (Create/POST) Create a new subscription to an event
+        ```
+        ParseUser user = (User) ParseUser.getCurrentParseUser();
+        user.subscribe(event);
+        event.subscribe(user);
+        
+        ```
+    - (Delete) Delete a subscription to an event
+        ```
+        ParseUser user = (User) ParseUser.getCurrentParseUser();
+        user.unsubscribe(event);
+        event.unsubscribe(user);
+         ```
+    - Use Google Calendar API to export events (see Google Calendar API documentation here: https://developers.google.com/calendar)
