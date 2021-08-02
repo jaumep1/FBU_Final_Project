@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -113,6 +114,18 @@ public class PersonalProfileFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        binding.switchProfileType.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isAttendee = !isAttendee;
+                setUser();
+                try {
+                    loadEventsFromCacheData(MainActivity.getEvents());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -175,7 +188,11 @@ public class PersonalProfileFragment extends Fragment {
             }
         });
 
-        binding.tvHeader.setText("Events You Created:");
+        if (isAttendee) {
+            binding.tvHeader.setText("Events You Are Going To:");
+        } else {
+            binding.tvHeader.setText("Events You Created:");
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -288,6 +305,7 @@ public class PersonalProfileFragment extends Fragment {
 
                 events.add(newEvent);
                 activeEvents.add(newEvent);
+                adapter.notifyDataSetChanged();
             }
         }
     }

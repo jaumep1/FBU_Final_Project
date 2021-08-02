@@ -39,7 +39,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivProfilePic"
+        android:layout_alignBottom="@id/switchProfileType"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         tools:text="Events You Created" />
+
+    <Switch
+        android:id="@+id/switchProfileType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivProfilePic"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/tvHeader" />
 </RelativeLayout>
