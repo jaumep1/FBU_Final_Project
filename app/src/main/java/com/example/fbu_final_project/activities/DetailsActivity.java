@@ -3,12 +3,15 @@ package com.example.fbu_final_project.activities;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.desarrollodroide.libraryfragmenttransactionextended.FragmentTransactionExtended;
@@ -27,6 +30,8 @@ import org.parceler.Parcels;
 public class DetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailsActivity";
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+
     public ActivityDetailsBinding binding;
 
     final FragmentManager fragmentManager = getFragmentManager();
@@ -90,6 +95,15 @@ public class DetailsActivity extends AppCompatActivity {
             });
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            ((PersonalProfileFragment) activeFragment).handleResult(requestCode, resultCode, data);
+        }
     }
 
     private void goLoginActivity() {

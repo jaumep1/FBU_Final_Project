@@ -21,7 +21,6 @@ import com.example.fbu_final_project.databinding.ActivityMainBinding;
 import com.example.fbu_final_project.fragments.CreateFragment;
 import com.example.fbu_final_project.fragments.EventsFeedFragment;
 import com.example.fbu_final_project.fragments.PersonalEventsFragment;
-import com.example.fbu_final_project.fragments.PersonalProfileFragment;
 import com.example.fbu_final_project.models.DriveFile;
 import com.example.fbu_final_project.models.Event;
 import com.google.android.material.navigation.NavigationBarView;
@@ -47,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final int SELECT_IMAGE_CODE = 20;
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
 
     private android.app.Fragment activeFragment;
 
@@ -142,8 +140,6 @@ public class MainActivity extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "Image selected!",
                     Toast.LENGTH_SHORT).show();
-        } else if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            ((PersonalProfileFragment) activeFragment).handleResult(requestCode, resultCode, data);
         }
     }
 

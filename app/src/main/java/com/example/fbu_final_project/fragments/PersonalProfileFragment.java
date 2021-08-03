@@ -235,6 +235,7 @@ public class PersonalProfileFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void handleResult(int requestCode, int resultCode, Intent data) {
+        Log.i("reached", "reached");
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 user.setProfilePic(new ParseFile(photoFile));
