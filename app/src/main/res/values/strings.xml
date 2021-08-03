@@ -31,4 +31,6 @@
     <string name="subscribe">Subscribe</string>
     <string name="select_image">Select Image:</string>
     <string name="view_attendees">View Attendees</string>
+    <string name="who_s_going">Who\'s Going:</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -334,7 +334,11 @@ public class EventsFeedFragment extends Fragment {
             newEvent.setAuthor(jsonObject.getString("author"));
             newEvent.setName(jsonObject.getString("name"));
             newEvent.setDescription(jsonObject.getString("description"));
-            newEvent.setPoster(jsonObject.getString("poster"));
+            try {
+                newEvent.setPoster(jsonObject.getString("poster"));
+            } catch (Exception posterException) {
+
+            }
 
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("eee MMM dd HH:mm:ss zzz yyyy");
 

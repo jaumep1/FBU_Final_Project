@@ -3,6 +3,7 @@ package com.example.fbu_final_project.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
         public void bind(DriveFile file) {
             Glide.with(context)
-                    .load(String.format(file.getThumbnail()))
+                    .load(file.getThumbnail())
                     .into(binding.ivImage);
 
             itemView.setOnClickListener(new View.OnClickListener() {

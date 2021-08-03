@@ -383,14 +383,18 @@ public class CreateFragment extends Fragment {
                 binding.tvEndDate.setText("END DATE");
 
                 JSONArray events = MainActivity.getEvents();
+                JSONArray newEvents = new JSONArray();
                 try {
-                    events.put(0, event.toJSON());
+                    newEvents.put(event.toJSON());
+                    for (int i = 0; i < events.length(); i++) {
+                        newEvents.put(events.get(i));
+                    }
                 } catch (JSONException jsonException) {
                     jsonException.printStackTrace();
                 }
 
                 try {
-                    MainActivity.cacheEvents(events);
+                    MainActivity.cacheEvents(newEvents);
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }

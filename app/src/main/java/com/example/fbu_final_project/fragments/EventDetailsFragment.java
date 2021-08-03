@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -29,10 +30,16 @@ import com.example.fbu_final_project.databinding.FragmentEventDetailsBinding;
 import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.User;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.royrodriguez.transitionbutton.TransitionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -179,6 +186,37 @@ public class EventDetailsFragment extends Fragment {
                 });
             }
         });
+
+        binding.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the loading animation when the user tap the button
+                binding.btnDelete.startAnimation();
+
+                // Do your networking task or background work here.
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean isSuccessful = deleteEvent();
+
+                        // Choose a stop animation if your call was succesful or not
+                        if (isSuccessful) {
+                            binding.btnDelete.stopAnimation(TransitionButton.StopAnimationStyle.EXPAND, new TransitionButton.OnAnimationStopEndListener() {
+                                @Override
+                                public void onAnimationStopEnd() {
+                                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                    startActivity(intent);
+                                }
+                            });
+                        } else {
+                            binding.btnDelete.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
+                        }
+                    }
+                }, 2000);
+            }
+        });
     }
 
     @Override
@@ -249,5 +287,35 @@ public class EventDetailsFragment extends Fragment {
             }
         }
         return false;
+    }
+
+    private boolean deleteEvent() {
+        final boolean[] succeeded = {true};
+
+        ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
+        query.whereEqualTo(Event.KEY_OBJECT_ID, event.getObjectId());
+        query.getFirstInBackground(new GetCallback<Event>() {
+            @Override
+            public void done(Event object, ParseException e) {
+                try {
+                    object.delete();
+                    object.saveInBackground();
+                    JSONArray events = MainActivity.getEvents();
+                    for (int i = 0; i < events.length(); i++) {
+                        if (((JSONObject) events.get(i)).getString("objectID")
+                                .equals(event.getObjectId())) {
+                            events.remove(i);
+                            break;
+                        }
+                    }
+
+                    MainActivity.cacheEvents(events);
+                } catch (ParseException | JSONException | IOException exception) {
+                    exception.printStackTrace();
+                    succeeded[0] = false;
+                }
+            }
+        });
+        return succeeded[0];
     }
 }
