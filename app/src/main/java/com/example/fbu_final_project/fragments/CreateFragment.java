@@ -42,6 +42,11 @@ import com.royrodriguez.transitionbutton.TransitionButton;
 import android.text.format.DateFormat;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.mortbay.jetty.Main;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -368,8 +373,6 @@ public class CreateFragment extends Fragment {
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e(TAG ,"Error while saving event", e);
-                    Toast.makeText(getContext(), "Error while saving!",
-                            Toast.LENGTH_SHORT).show();
                 }
                 Log.i(TAG, "Event save was successful!");
                 binding.etEventName.setText("");
@@ -378,6 +381,19 @@ public class CreateFragment extends Fragment {
                 binding.tvStartDate.setText("START DATE");
                 binding.tvEndTime.setText("END TIME");
                 binding.tvEndDate.setText("END DATE");
+
+                JSONArray events = MainActivity.getEvents();
+                try {
+                    events.put(0, event.toJSON());
+                } catch (JSONException jsonException) {
+                    jsonException.printStackTrace();
+                }
+
+                try {
+                    MainActivity.cacheEvents(events);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
         });
     }

@@ -178,6 +178,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public static boolean cacheEvents(JSONArray events) throws IOException {
+        String filename = "events";
+        File file = new File(context.getCacheDir(), filename);
+        try {
+            FileOutputStream outputStream = new FileOutputStream(file);
+            OutputStreamWriter outputWriter = new OutputStreamWriter(outputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(outputWriter);
+            boolean success = false;
+
+            try {
+                bufferedWriter.write(events.toString());
+                success = true;
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                try {
+                    bufferedWriter.close();
+                } catch(Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            bufferedWriter.close();
+            outputWriter.close();
+            outputStream.close();
+            return success;
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
     public static JSONArray getEvents() {
         String filename = "events";
         File file = new File(context.getCacheDir(), filename);
