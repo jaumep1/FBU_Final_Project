@@ -20,7 +20,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fbu_final_project.extras.EndlessRecyclerViewScrollListener;
 import com.example.fbu_final_project.R;
 import com.example.fbu_final_project.activities.MainActivity;
 import com.example.fbu_final_project.adapters.EventsFeedAdapter;
@@ -52,6 +54,9 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 public class EventsFeedFragment extends Fragment {
 
     private static final String TAG = "EventsFeedFragment";
+
+    private EndlessRecyclerViewScrollListener scrollListener;
+
     FragmentEventsFeedBinding binding;
     List<Event> events = new ArrayList<>();
     List<Event> activeEvents = new ArrayList<>();
@@ -151,6 +156,14 @@ public class EventsFeedFragment extends Fragment {
                 mWaveSwipeRefreshLayout.setRefreshing(false);
             }
         });
+
+        scrollListener = new EndlessRecyclerViewScrollListener(feedManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                queryMoreEvents();
+            }
+        };
+        binding.rvEvents.addOnScrollListener(scrollListener);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -368,5 +381,40 @@ public class EventsFeedFragment extends Fragment {
             events.add(newEvent);
             activeEvents.add(newEvent);
         }
+    }
+
+    private void queryMoreEvents() {
+        ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
+
+        query.include(Event.KEY_EVENT_NAME);
+        query.include(Event.KEY_EVENT_DESCRIPTION);
+        query.include(Event.KEY_AUTHOR);
+        query.include(Event.KEY_START_TIME);
+        query.include(Event.KEY_END_TIME);
+        query.include(Event.KEY_IMAGE);
+
+        query.whereLessThan(Event.KEY_CREATED_AT, events.get(events.size() - 1).getCreatedAt());
+
+        query.setLimit(20);
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<Event>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void done(List<Event> feed, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting events", e);
+                    return;
+                }
+                events.addAll(feed);
+                activeEvents.addAll(feed);
+                feedAdapter.notifyDataSetChanged();
+                try {
+                    MainActivity.cacheEvents(events);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                MainActivity.loaded = true;
+            }
+        });
     }
 }

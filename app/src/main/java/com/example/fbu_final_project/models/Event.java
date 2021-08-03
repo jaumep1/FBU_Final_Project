@@ -18,6 +18,7 @@ import java.util.Date;
 @ParseClassName("Event")
 public class Event extends ParseObject {
     public static final String KEY_OBJECT_ID = "objectId";
+    public static final String KEY_CREATED_AT = "createdAt";
     public static final String KEY_CREATED_BY = "createdBy";
     public static final String KEY_AUTHOR = "authorName";
     public static final String KEY_EVENT_NAME = "eventName";
