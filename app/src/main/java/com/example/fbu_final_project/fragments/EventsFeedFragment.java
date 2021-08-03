@@ -81,6 +81,13 @@ public class EventsFeedFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        queryTags();
+        try {
+            fetchEvents();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         ParseUser.getCurrentUser().fetchInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
@@ -108,13 +115,6 @@ public class EventsFeedFragment extends Fragment {
         tagsAdapter = new TagsAdapter(getContext(), tags);
         binding.rvTagsFilter.setAdapter(tagsAdapter);
 
-        queryTags();
-        try {
-            fetchEvents();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -135,7 +135,7 @@ public class EventsFeedFragment extends Fragment {
 
         //Wait to set listeners until recylcler view is bound
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(runnable, 200); // run in 1 second
+        handler.postDelayed(runnable, 1000); // run in 1 second
 
         mWaveSwipeRefreshLayout = binding.swipeRefresh;
         mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
