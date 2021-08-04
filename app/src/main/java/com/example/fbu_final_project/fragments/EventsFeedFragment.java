@@ -1,6 +1,8 @@
 package com.example.fbu_final_project.fragments;
 
 import android.app.Fragment;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -166,6 +169,15 @@ public class EventsFeedFragment extends Fragment {
                 };
                 binding.rvEvents.addOnScrollListener(scrollListener);
                 mWaveSwipeRefreshLayout.setRefreshing(false);
+
+                if(MainActivity.connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()
+                        == NetworkInfo.State.CONNECTED ||
+                        MainActivity.connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState()
+                                == NetworkInfo.State.CONNECTED) {
+                    MainActivity.connected = true;
+                } else {
+                    MainActivity.connected = false;
+                }
             }
         });
 
@@ -301,7 +313,11 @@ public class EventsFeedFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     protected void fetchEvents() throws JSONException {
-        if (MainActivity.loaded) {
+        if (!MainActivity.connected) {
+            Toast.makeText(getContext(), "Network is offline! Showing cached events.", Toast.LENGTH_SHORT).show();
+            JSONArray eventsJsonArray = MainActivity.getEvents();
+            loadEventsFromCacheData(eventsJsonArray);
+        } else if (MainActivity.loaded) {
             JSONArray eventsJsonArray = MainActivity.getEvents();
             loadEventsFromCacheData(eventsJsonArray);
         } else {
