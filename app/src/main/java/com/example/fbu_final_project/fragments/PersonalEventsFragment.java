@@ -91,7 +91,6 @@ public class PersonalEventsFragment extends EventsFeedFragment {
                 @Override
                 public void done(Event object, ParseException e) {
                     minAge = object.getCreatedAt();
-                    Log.i("waka", minAge.toString());
                 }
             });
         }

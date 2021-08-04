@@ -119,7 +119,7 @@ public class EventsFeedFragment extends Fragment {
         tagsManager.canScrollHorizontally();
         binding.rvTagsFilter.setLayoutManager(tagsManager);
 
-        feedAdapter = new EventsFeedAdapter(getContext(), events);
+        feedAdapter = new EventsFeedAdapter(getContext(), activeEvents);
         binding.rvEvents.setAdapter(feedAdapter);
 
         tagsAdapter = new TagsAdapter(getContext(), tags);
