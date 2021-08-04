@@ -5,7 +5,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.method.KeyListener;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +49,7 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -56,6 +60,7 @@ public class EventsFeedFragment extends Fragment {
     private static final String TAG = "EventsFeedFragment";
 
     private EndlessRecyclerViewScrollListener scrollListener;
+    private Date minAge;
 
     FragmentEventsFeedBinding binding;
     List<Event> events = new ArrayList<>();
@@ -114,7 +119,7 @@ public class EventsFeedFragment extends Fragment {
         tagsManager.canScrollHorizontally();
         binding.rvTagsFilter.setLayoutManager(tagsManager);
 
-        feedAdapter = new EventsFeedAdapter(getContext(), activeEvents);
+        feedAdapter = new EventsFeedAdapter(getContext(), events);
         binding.rvEvents.setAdapter(feedAdapter);
 
         tagsAdapter = new TagsAdapter(getContext(), tags);
@@ -153,6 +158,13 @@ public class EventsFeedFragment extends Fragment {
                     e.printStackTrace();
                 }
                 queryTags();
+                scrollListener = new EndlessRecyclerViewScrollListener(feedManager) {
+                    @Override
+                    public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                        queryMoreEvents();
+                    }
+                };
+                binding.rvEvents.addOnScrollListener(scrollListener);
                 mWaveSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -289,13 +301,9 @@ public class EventsFeedFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     protected void fetchEvents() throws JSONException {
-        events.clear();
-        activeEvents.clear();
-
         if (MainActivity.loaded) {
             JSONArray eventsJsonArray = MainActivity.getEvents();
             loadEventsFromCacheData(eventsJsonArray);
-
         } else {
             queryEvents();
         }
@@ -311,23 +319,31 @@ public class EventsFeedFragment extends Fragment {
         query.include(Event.KEY_END_TIME);
         query.include(Event.KEY_IMAGE);
 
-        query.setLimit(20);
+        query.setLimit(1);
         query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<Event>() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void done(List<Event> feed, ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Issue with getting events", e);
                     return;
                 }
+
+                if (!feed.isEmpty()) {
+                    minAge = feed.get(feed.size() - 1).getCreatedAt();
+                }
+
+                sortByStartTime(feed);
+
                 events.clear();
                 events.addAll(feed);
+                Log.i("waka1", String.format("%d %d", feed.size(), events.size()));
                 activeEvents.clear();
                 activeEvents.addAll(feed);
                 feedAdapter.notifyDataSetChanged();
                 try {
-                    MainActivity.cacheEvents(events);
+                    writeCache();
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -338,6 +354,8 @@ public class EventsFeedFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     protected void loadEventsFromCacheData(JSONArray jsonArray) throws JSONException {
+        events.clear();
+        activeEvents.clear();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
 
@@ -379,8 +397,16 @@ public class EventsFeedFragment extends Fragment {
             newEvent.setAttendees(eventAttendeesFromJson);
 
             events.add(newEvent);
-            activeEvents.add(newEvent);
+            Log.i("waka2", String.format("%d", events.size()));
         }
+
+        if (!events.isEmpty()) {
+            minAge = events.get(events.size() - 1).getCreatedAt();
+        }
+
+        sortByStartTime(events);
+        activeEvents.addAll(events);
+
     }
 
     private void queryMoreEvents() {
@@ -393,28 +419,46 @@ public class EventsFeedFragment extends Fragment {
         query.include(Event.KEY_END_TIME);
         query.include(Event.KEY_IMAGE);
 
-        query.whereLessThan(Event.KEY_CREATED_AT, events.get(events.size() - 1).getCreatedAt());
+        query.whereLessThan(Event.KEY_CREATED_AT, minAge);
 
-        query.setLimit(20);
+        query.setLimit(1);
         query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<Event>() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void done(List<Event> feed, ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Issue with getting events", e);
                     return;
                 }
+
+                if (!feed.isEmpty()) {
+                    minAge = feed.get(feed.size() - 1).getCreatedAt();
+                }
+
+                sortByStartTime(feed);
+
                 events.addAll(feed);
+                Log.i("waka3", String.format("%d %d", feed.size(), events.size()));
                 activeEvents.addAll(feed);
                 feedAdapter.notifyDataSetChanged();
                 try {
-                    MainActivity.cacheEvents(events);
+                    writeCache();
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
                 MainActivity.loaded = true;
             }
         });
+    }
+
+    protected void writeCache() throws IOException {
+        MainActivity.cacheEvents(events);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void sortByStartTime(List<Event> list) {
+        list.sort((e1, e2) -> e1.getStartTime().compareTo(e2.getStartTime()));
+        Collections.reverse(list);
     }
 }

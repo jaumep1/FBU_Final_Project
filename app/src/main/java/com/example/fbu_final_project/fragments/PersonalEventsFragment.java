@@ -128,4 +128,9 @@ public class PersonalEventsFragment extends EventsFeedFragment {
             });
         }
     }
+
+    @Override
+    protected void writeCache() throws IOException {
+        return;
+    }
 }
