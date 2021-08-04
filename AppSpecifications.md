@@ -45,14 +45,17 @@ This app will let users save and sign up for events that they are interested in.
 
 * [x] View orients to landscape and portrait mode
 * [x] Users can view their own profile page
-    * [x] Users can set/change a profile image
+    * [x] Users can set/change their profile image
 * [x] Users can view details about event organizers
 * [x] Users can see who else subscribes to an event
+* [x] Users can view details about event attendees
 * [x] Users can swipe to navigate across views
 * [x] Event data is cached across sessions so that it only reloads upon creating the main activity and refreshing the feed
 * [x] Users can delete events they created
 * [x] Users can browse events and their subscriptions offline
 * [x] Users can see a curated feed events (mix of newness and chronology)
+* [x] Users can load events using infinite scrolling pagination
+* [ ] Users can recover their passwords securely
 * [ ] Users can get directions to events
 * [ ] Users can comment on event pages
 * [ ] Users can sign in with Facebook
