@@ -60,7 +60,7 @@ public class EventsFeedFragment extends Fragment {
     private static final String TAG = "EventsFeedFragment";
 
     private EndlessRecyclerViewScrollListener scrollListener;
-    private Date minAge;
+    public Date minAge;
 
     FragmentEventsFeedBinding binding;
     List<Event> events = new ArrayList<>();
@@ -319,7 +319,7 @@ public class EventsFeedFragment extends Fragment {
         query.include(Event.KEY_END_TIME);
         query.include(Event.KEY_IMAGE);
 
-        query.setLimit(1);
+        query.setLimit(20);
         query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<Event>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -338,7 +338,6 @@ public class EventsFeedFragment extends Fragment {
 
                 events.clear();
                 events.addAll(feed);
-                Log.i("waka1", String.format("%d %d", feed.size(), events.size()));
                 activeEvents.clear();
                 activeEvents.addAll(feed);
                 feedAdapter.notifyDataSetChanged();
@@ -397,19 +396,17 @@ public class EventsFeedFragment extends Fragment {
             newEvent.setAttendees(eventAttendeesFromJson);
 
             events.add(newEvent);
-            Log.i("waka2", String.format("%d", events.size()));
         }
-
         if (!events.isEmpty()) {
             minAge = events.get(events.size() - 1).getCreatedAt();
         }
 
         sortByStartTime(events);
         activeEvents.addAll(events);
-
     }
 
-    private void queryMoreEvents() {
+    protected void queryMoreEvents() {
+
         ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
 
         query.include(Event.KEY_EVENT_NAME);
@@ -421,7 +418,7 @@ public class EventsFeedFragment extends Fragment {
 
         query.whereLessThan(Event.KEY_CREATED_AT, minAge);
 
-        query.setLimit(1);
+        query.setLimit(20);
         query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<Event>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -439,7 +436,6 @@ public class EventsFeedFragment extends Fragment {
                 sortByStartTime(feed);
 
                 events.addAll(feed);
-                Log.i("waka3", String.format("%d %d", feed.size(), events.size()));
                 activeEvents.addAll(feed);
                 feedAdapter.notifyDataSetChanged();
                 try {
@@ -457,7 +453,7 @@ public class EventsFeedFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void sortByStartTime(List<Event> list) {
+    public void sortByStartTime(List<Event> list) {
         list.sort((e1, e2) -> e1.getStartTime().compareTo(e2.getStartTime()));
         Collections.reverse(list);
     }

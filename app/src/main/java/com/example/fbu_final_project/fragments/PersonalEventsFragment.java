@@ -10,6 +10,7 @@ import com.example.fbu_final_project.models.Event;
 import com.example.fbu_final_project.models.Tag;
 import com.example.fbu_final_project.models.User;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -34,6 +35,9 @@ public class PersonalEventsFragment extends EventsFeedFragment {
     protected void loadEventsFromCacheData(JSONArray jsonArray) throws JSONException {
 
         ArrayList<String> eventIds = new ArrayList<>();
+
+        events.clear();
+        activeEvents.clear();
 
         for (Event sub : ((User) ParseUser.getCurrentUser()).getSubscriptions()) {
             eventIds.add(sub.getObjectId());
@@ -76,16 +80,32 @@ public class PersonalEventsFragment extends EventsFeedFragment {
                     eventAttendeesFromJson.add(newUser);
                 }
                 newEvent.setAttendees(eventAttendeesFromJson);
-
                 events.add(newEvent);
-                activeEvents.add(newEvent);
             }
         }
+        if (!events.isEmpty()) {
+
+            ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
+            query.whereEqualTo(Event.KEY_OBJECT_ID, events.get(events.size() - 1).getObjectId());
+            query.getFirstInBackground(new GetCallback<Event>() {
+                @Override
+                public void done(Event object, ParseException e) {
+                    minAge = object.getCreatedAt();
+                    Log.i("waka", minAge.toString());
+                }
+            });
+        }
+
+        sortByStartTime(events);
+        activeEvents.addAll(events);
     }
 
     @Override
     protected void queryEvents() {
         {
+            events.clear();
+            activeEvents.clear();
+
             ArrayList<String> eventIds = new ArrayList<>();
 
             for (Event event: ((User) ParseUser.getCurrentUser()).getSubscriptions()) {
@@ -106,13 +126,20 @@ public class PersonalEventsFragment extends EventsFeedFragment {
             query.setLimit(20);
             query.addDescendingOrder("createdAt");
             query.findInBackground(new FindCallback<Event>() {
-                @RequiresApi(api = Build.VERSION_CODES.M)
+                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void done(List<Event> feed, ParseException e) {
                     if (e != null) {
                         Log.e(TAG, "Issue with getting events", e);
                         return;
                     }
+
+                    if (!feed.isEmpty()) {
+                        minAge = feed.get(feed.size() - 1).getCreatedAt();
+                    }
+
+                    sortByStartTime(feed);
+
                     events.clear();
                     events.addAll(feed);
                     activeEvents.clear();
@@ -127,6 +154,57 @@ public class PersonalEventsFragment extends EventsFeedFragment {
                 }
             });
         }
+    }
+
+    @Override
+    protected void queryMoreEvents() {
+
+        ArrayList<String> eventIds = new ArrayList<>();
+
+        for (Event event: ((User) ParseUser.getCurrentUser()).getSubscriptions()) {
+            eventIds.add(event.getObjectId());
+        }
+
+        ParseQuery<Event> query = ParseQuery.getQuery(Event.class);
+
+        query.include(Event.KEY_EVENT_NAME);
+        query.include(Event.KEY_EVENT_DESCRIPTION);
+        query.include(Event.KEY_AUTHOR);
+        query.include(Event.KEY_START_TIME);
+        query.include(Event.KEY_END_TIME);
+        query.include(Event.KEY_IMAGE);
+
+        query.whereContainedIn(Event.KEY_OBJECT_ID, eventIds);
+        query.whereLessThan(Event.KEY_CREATED_AT, minAge);
+
+        query.setLimit(20);
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<Event>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void done(List<Event> feed, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting events", e);
+                    return;
+                }
+
+                if (!feed.isEmpty()) {
+                    minAge = feed.get(feed.size() - 1).getCreatedAt();
+                }
+
+                sortByStartTime(feed);
+
+                events.addAll(feed);
+                activeEvents.addAll(feed);
+                feedAdapter.notifyDataSetChanged();
+                try {
+                    writeCache();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                MainActivity.loaded = true;
+            }
+        });
     }
 
     @Override
