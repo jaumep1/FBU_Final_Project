@@ -21,6 +21,7 @@ import com.royrodriguez.transitionbutton.TransitionButton;
 public class SignupActivity extends AppCompatActivity {
 
     private static final String TAG = "SignupActivity";
+    ActivitySignupBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,7 @@ public class SignupActivity extends AppCompatActivity {
 
         Slidr.attach(this);
 
-        ActivitySignupBinding binding = ActivitySignupBinding.inflate(getLayoutInflater());
+        binding = ActivitySignupBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
@@ -45,7 +46,11 @@ public class SignupActivity extends AppCompatActivity {
                 String password = binding.etPassword.getText().toString();
                 String firstname = binding.etFirstname.getText().toString();
                 String lastname = binding.etLastname.getText().toString();
-                signUp(username, password, firstname, lastname);
+                String securityQuestion = binding.etSecurity.getText().toString();
+
+                if (fieldsInputted()) {
+                    signUp(username, password, firstname, lastname, securityQuestion);
+                }
 
                 final Handler handler = new Handler();
                 loginUser(username, password);
@@ -63,6 +68,11 @@ public class SignupActivity extends AppCompatActivity {
                             });
                         } else {
                             binding.btnSignup.stopAnimation(TransitionButton.StopAnimationStyle.SHAKE, null);
+                            if (fieldsInputted()) {
+                                Toast.makeText(getApplicationContext(), "Error on sign up!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Please input all fields!", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 }, 2000);
@@ -70,7 +80,7 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    private void signUp(String username, String password, String firstname, String lastname) {
+    private void signUp(String username, String password, String firstname, String lastname, String securityQuestion) {
         // Create the ParseUser
         User user = new User();
         // Set core properties
@@ -78,6 +88,7 @@ public class SignupActivity extends AppCompatActivity {
         user.setPassword(password);
         user.setFirstname(firstname);
         user.setLastname(lastname);
+        user.setSecurityQuestion(securityQuestion);
         user.createSubs();
 
         // Invoke signUpInBackground
@@ -112,5 +123,24 @@ public class SignupActivity extends AppCompatActivity {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
+    }
+
+    private boolean fieldsInputted() {
+        if (binding.etUsername.getText().toString().equals("")) {
+            return false;
+        }
+        if (binding.etPassword.getText().toString().equals("")) {
+            return false;
+        }
+        if (binding.etFirstname.getText().toString().equals("")) {
+            return false;
+        }
+        if (binding.etLastname.getText().toString().equals("")) {
+            return false;
+        }
+        if (binding.etSecurity.getText().toString().equals("")) {
+            return false;
+        }
+        return true;
     }
 }

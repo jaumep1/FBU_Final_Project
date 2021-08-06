@@ -25,6 +25,7 @@ public class User extends ParseUser {
     public static final String KEY_LASTNAME = "lastname";
     public static final String KEY_SUBSCRIPTIONS = "subscriptions";
     public static final String KEY_PICTURE = "profileImage";
+    public static final String KEY_SECURITY_QUESTION = "securityQuestion";
 
     public void setUsername(String username) {
         put(KEY_USERNAME, username);
@@ -74,5 +75,13 @@ public class User extends ParseUser {
     public void setProfilePic(ParseFile file) {
          remove(KEY_PICTURE);
          put(KEY_PICTURE, file);
+    }
+
+    public void setSecurityQuestion(String answer) {
+        put(KEY_SECURITY_QUESTION, answer);
+    }
+
+    public String getSecurityQuestion() {
+        return getString(KEY_SECURITY_QUESTION);
     }
 }

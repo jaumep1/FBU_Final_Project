@@ -68,15 +68,27 @@
         tools:layout_editor_absoluteX="77dp"
         tools:layout_editor_absoluteY="121dp" />
 
+    <EditText
+        android:id="@+id/etSecurity"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etLastname"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="What was the name of your first pet?"
+        tools:layout_editor_absoluteX="77dp"
+        tools:layout_editor_absoluteY="121dp" />
+
     <com.royrodriguez.transitionbutton.TransitionButton
         android:id="@+id/btnSignup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etLastname"
+        android:layout_below="@+id/etSecurity"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
+        android:padding="10dp"
         android:text="@string/sign_up"
         tools:layout_editor_absoluteX="200dp"
-        tools:layout_editor_absoluteY="332dp"
-        android:padding="10dp"/>
+        tools:layout_editor_absoluteY="332dp" />
 </RelativeLayout>
