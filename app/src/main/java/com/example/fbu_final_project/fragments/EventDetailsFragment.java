@@ -110,6 +110,13 @@ public class EventDetailsFragment extends Fragment {
             Glide.with(this).load(img).into(binding.ivPoster);
         }
 
+        if (event.getCreator().equals(ParseUser.getCurrentUser().getObjectId())){
+            binding.btnDelete.setVisibility(View.VISIBLE);
+
+        } else {
+            binding.btnDelete.setVisibility(View.INVISIBLE);
+
+        }
         setOnClickListeners();
     }
 
