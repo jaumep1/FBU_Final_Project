@@ -46,7 +46,7 @@ The following **stretch** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='TODO' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/jaumep1/FBU_Final_Project/blob/master/walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](https://licecap.en.softonic.com/).
 
