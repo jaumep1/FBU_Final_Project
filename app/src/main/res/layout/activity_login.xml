@@ -42,8 +42,6 @@
         tools:layout_editor_absoluteX="77dp"
         tools:layout_editor_absoluteY="121dp" />
 
-
-
     <com.royrodriguez.transitionbutton.TransitionButton
         android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
@@ -55,6 +53,18 @@
         tools:layout_editor_absoluteX="144dp"
         tools:layout_editor_absoluteY="217dp"
         android:padding="10dp"/>
+
+    <com.royrodriguez.transitionbutton.TransitionButton
+        android:id="@+id/btnForgot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSignup"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:padding="10dp"
+        android:text="Forgot Password"
+        tools:layout_editor_absoluteX="144dp"
+        tools:layout_editor_absoluteY="217dp" />
 
     <com.royrodriguez.transitionbutton.TransitionButton
         android:id="@+id/btnSignup"

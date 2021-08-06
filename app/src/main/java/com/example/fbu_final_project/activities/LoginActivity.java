@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.fbu_final_project.PasswordRecoveryActivity;
 import com.example.fbu_final_project.databinding.ActivityLoginBinding;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -79,9 +80,17 @@ public class LoginActivity extends AppCompatActivity {
                 goSignupActivity();
             }
         });
+
+        binding.btnForgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), PasswordRecoveryActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
-    private void loginUser(String username, String password) {
+    protected void loginUser(String username, String password) {
         Log.i(TAG, "Attempting to login user: " + username);
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
@@ -103,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    private void goMainActivity() {
+    protected void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();

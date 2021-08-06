@@ -1,5 +1,7 @@
 package com.example.fbu_final_project.models;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.parse.ParseClassName;
@@ -20,7 +22,7 @@ public class User extends ParseUser {
 
     public static final String KEY_ID = "objectId";
     public static final String KEY_USERNAME = "username";
-    private static final String KEY_PASSWORD = "password";
+    public static final String KEY_PASSWORD = "password";
     public static final String KEY_FIRSTNAME = "firstname";
     public static final String KEY_LASTNAME = "lastname";
     public static final String KEY_SUBSCRIPTIONS = "subscriptions";
@@ -31,7 +33,7 @@ public class User extends ParseUser {
         put(KEY_USERNAME, username);
     }
     public String getUsername() {
-        return getString("username");
+        return getString(KEY_USERNAME);
     }
     public void setPassword(String password) {
         put(KEY_PASSWORD, password);
